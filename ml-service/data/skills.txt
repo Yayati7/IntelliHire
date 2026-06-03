@@ -1,0 +1,24 @@
+Java
+Spring Boot
+Python
+Docker
+Kubernetes
+React
+Angular
+Node.js
+AWS
+Azure
+SQL
+PostgreSQL
+MongoDB
+Microservices
+REST API
+Git
+Linux
+Machine Learning
+Deep Learning
+TensorFlow
+PyTorch
+FastAPI
+Kafka
+Redis

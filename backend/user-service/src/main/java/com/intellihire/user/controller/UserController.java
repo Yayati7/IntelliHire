@@ -1,5 +1,6 @@
 package com.intellihire.user.controller;
 
+import com.intellihire.user.dto.UpdateUserDto;
 import com.intellihire.user.dto.UserRequestDto;
 import com.intellihire.user.entity.UserProfile;
 import com.intellihire.user.service.UserService;
@@ -33,5 +34,29 @@ public class UserController {
     public List<UserProfile> getUsers(){
 
         return userService.getAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public UserProfile getUser(
+            @PathVariable Long id
+    ){
+
+        return userService.getUserById(
+                id
+        );
+    }
+
+    @PutMapping("/{id}")
+    public UserProfile updateUser(
+
+            @PathVariable Long id,
+
+            @RequestBody UpdateUserDto dto
+    ){
+
+        return userService.updateUser(
+                id,
+                dto
+        );
     }
 }
