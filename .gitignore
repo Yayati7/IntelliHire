@@ -1,0 +1,23 @@
+# Python
+ml-service/venv/
+venv/
+__pycache__/
+*.pyc
+
+# Java
+target/
+*.class
+
+# IntelliJ
+.idea/
+*.iml
+
+# Node React
+node_modules/
+dist/
+
+# Env files
+.env
+
+# Uploads
+uploads/
