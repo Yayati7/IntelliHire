@@ -21,4 +21,5 @@ TensorFlow
 PyTorch
 FastAPI
 Kafka
-Redis
+
+Linux

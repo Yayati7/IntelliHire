@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name="resumes")
+@Table(name = "resumes")
 
 @Getter
 @Setter
@@ -25,4 +27,30 @@ public class Resume {
     private String fileName;
 
     private String filePath;
+
+    @Column(
+            columnDefinition = "TEXT"
+    )
+    private String extractedText;
+
+    private LocalDateTime uploadedAt;
+
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void onCreate() {
+
+        uploadedAt = LocalDateTime.now();
+
+        updatedAt = LocalDateTime.now();
+
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+
+        updatedAt = LocalDateTime.now();
+
+    }
+
 }

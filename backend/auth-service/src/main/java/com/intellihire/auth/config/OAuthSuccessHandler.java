@@ -2,6 +2,7 @@ package com.intellihire.auth.config;
 
 
 import com.intellihire.auth.entity.AuthUser;
+import com.intellihire.auth.entity.Role;
 
 import com.intellihire.auth.repository.AuthRepository;
 
@@ -13,6 +14,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -25,7 +27,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-
+@Slf4j
 @Component
 public class OAuthSuccessHandler
 
@@ -33,22 +35,20 @@ public class OAuthSuccessHandler
 
 
     private final AuthRepository repository;
+    private final JwtUtil jwtUtil;
 
-
-    public OAuthSuccessHandler(
-
-            AuthRepository repository
-
+    public OAuthSuccessHandler(AuthRepository repository, JwtUtil jwtUtil
     ){
 
-        this.repository=repository;
+        this.repository = repository;
+
+        this.jwtUtil = jwtUtil;
 
     }
 
 
 
     @Override
-
     public void onAuthenticationSuccess(
 
             HttpServletRequest request,
@@ -57,43 +57,46 @@ public class OAuthSuccessHandler
 
             Authentication authentication
 
-    )throws IOException,ServletException{
+    )throws IOException, ServletException{
 
 
-        OAuth2User oauthUser=
+        OAuth2User oauthUser =
 
                 (OAuth2User)
 
                         authentication.getPrincipal();
 
 
-        String email=
 
-                oauthUser.getAttribute("email");
+        String email = oauthUser.getAttribute("email");
+        String name = oauthUser.getAttribute("name");
 
-
-        String name=
-
-                oauthUser.getAttribute("name");
-
-
-
-        AuthUser user=
+        AuthUser user =
 
                 repository.findByEmail(email)
 
-                        .orElseGet(()->
+                        .orElseGet(() ->
 
 
                                 repository.save(
 
                                         AuthUser.builder()
 
-                                                .email(email)
+                                                .email(
+                                                        email
+                                                )
 
-                                                .name(name)
+                                                .name(
+                                                        name
+                                                )
 
-                                                .provider("GOOGLE")
+                                                .provider(
+                                                        "GOOGLE"
+                                                )
+
+                                                .role(
+                                                        Role.USER
+                                                )
 
                                                 .build()
 
@@ -103,21 +106,27 @@ public class OAuthSuccessHandler
 
 
 
-        String token=
+        String token = jwtUtil.generateAccessToken(user.getEmail(), user.getRole().name());
 
-                JwtUtil.generateToken(
+        log.info(
 
-                        user.getEmail()
+                "ACTION={} service={} user={} details={}",
 
-                );
+                "GOOGLE_LOGIN",
 
+                "AUTH-SERVICE",
 
+                email,
+
+                "OAuth2 authentication successful"
+
+        );
 
         response.sendRedirect(
 
                 "http://localhost:5173/login-success?token="
 
-                        +token
+                        + token
 
         );
 

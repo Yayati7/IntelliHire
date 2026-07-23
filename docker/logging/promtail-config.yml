@@ -1,0 +1,164 @@
+server:
+
+  http_listen_port: 9080
+
+
+
+positions:
+
+  filename: /tmp/positions.yaml
+
+
+
+clients:
+
+
+  - url: http://loki:3100/loki/api/v1/push
+
+
+
+scrape_configs:
+
+
+  # AUTH SERVICE
+
+  - job_name: auth-service
+
+
+    static_configs:
+
+
+      - targets:
+
+          - localhost
+
+
+        labels:
+
+
+          service: AUTH-SERVICE
+
+
+          __path__: /logs/auth-service/*.log
+
+
+
+
+  # USER SERVICE
+
+  - job_name: user-service
+
+
+    static_configs:
+
+
+      - targets:
+
+          - localhost
+
+
+        labels:
+
+
+          service: USER-SERVICE
+
+
+          __path__: /logs/user-service/*.log
+
+
+
+
+
+  # JOB SERVICE
+
+  - job_name: job-service
+
+
+    static_configs:
+
+
+      - targets:
+
+          - localhost
+
+
+        labels:
+
+
+          service: JOB-SERVICE
+
+
+          __path__: /logs/job-service/*.log
+
+
+
+
+  # APPLICATION SERVICE
+
+  - job_name: application-service
+
+
+    static_configs:
+
+
+      - targets:
+
+          - localhost
+
+
+        labels:
+
+
+          service: APPLICATION-SERVICE
+
+
+          __path__: /logs/application-service/*.log
+
+
+
+
+  # RECOMMENDATION SERVICE
+
+  - job_name: recommendation-service
+
+
+    static_configs:
+
+
+      - targets:
+
+          - localhost
+
+
+        labels:
+
+
+          service: RECOMMENDATION-SERVICE
+
+
+          __path__: /logs/recommendation-service/*.log
+
+
+
+
+
+  # ANALYTICS SERVICE
+
+  - job_name: analytics-service
+
+
+    static_configs:
+
+
+      - targets:
+
+          - localhost
+
+
+        labels:
+
+
+          service: ANALYTICS-SERVICE
+
+
+          __path__: /logs/analytics-service/*.log

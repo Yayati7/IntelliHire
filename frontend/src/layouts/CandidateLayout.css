@@ -1,0 +1,19 @@
+.candidate-layout{
+
+    display:flex;
+
+    margin-top:75px;
+
+}
+
+.candidate-main{
+
+    flex:1;
+
+    padding:40px;
+
+    background:#f4f7fb;
+
+    min-height:100vh;
+
+}

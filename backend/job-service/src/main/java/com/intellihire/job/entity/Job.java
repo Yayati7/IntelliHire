@@ -30,4 +30,6 @@ public class Job {
     private String description;
 
     private String skills;
+
+    private Long recruiterId;
 }

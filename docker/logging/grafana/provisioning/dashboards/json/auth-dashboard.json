@@ -1,0 +1,50 @@
+{
+  "title": "Authentication Monitoring",
+  "uid": "auth-dashboard",
+  "schemaVersion": 39,
+  "version": 2,
+
+  "panels": [
+
+    {
+      "type": "logs",
+      "title": "Login Activity",
+
+      "gridPos": {
+        "x":0,
+        "y":0,
+        "w":24,
+        "h":8
+      },
+
+      "targets":[
+        {
+          "expr":
+          "{service=\"AUTH-SERVICE\"} |~ \"LOGIN_SUCCESS|GOOGLE_LOGIN|USER_SIGNUP\""
+        }
+      ]
+    },
+
+
+    {
+      "type":"logs",
+
+      "title":"Security Failures",
+
+      "gridPos":{
+        "x":0,
+        "y":8,
+        "w":24,
+        "h":8
+      },
+
+      "targets":[
+        {
+          "expr":
+          "{service=\"AUTH-SERVICE\"} |~ \"LOGIN_FAILED|ERROR|Exception\""
+        }
+      ]
+    }
+
+  ]
+}

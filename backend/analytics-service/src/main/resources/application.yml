@@ -38,3 +38,40 @@ management:
     web:
       exposure:
         include: "*"
+
+
+logging:
+
+  level:
+
+    root: INFO
+
+    com.intellihire: DEBUG
+
+    org.springframework.web: DEBUG
+
+    org.hibernate.SQL: DEBUG
+
+    org.springframework.cloud.openfeign: DEBUG
+
+    org.hibernate.orm.jdbc.bind: TRACE
+
+    feign: DEBUG
+
+
+  file:
+
+    name: logs/analytics-service/app.log
+
+
+  logback:
+
+    rollingpolicy:
+
+      max-file-size: 50MB
+
+      max-history: 90
+
+      total-size-cap: 5GB
+
+      file-name-pattern: logs/auth-service/archive/app-%d{yyyy-MM-dd}.%i.log.gz

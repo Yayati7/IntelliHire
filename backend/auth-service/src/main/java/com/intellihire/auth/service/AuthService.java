@@ -4,60 +4,54 @@ package com.intellihire.auth.service;
 import com.intellihire.auth.dto.*;
 
 import com.intellihire.auth.entity.AuthUser;
+import com.intellihire.auth.entity.Role;
+import com.intellihire.auth.entity.RefreshToken;
 
 import com.intellihire.auth.repository.AuthRepository;
 
 import com.intellihire.auth.util.JwtUtil;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.stereotype.Service;
 
 
-import java.util.Map;
-
-
+@Slf4j
 @Service
 public class AuthService {
-
-
     private final AuthRepository repository;
-
-
     private final PasswordEncoder encoder;
-
+    private final JwtUtil jwtUtil;
+    private final RefreshTokenService refreshService;
 
     public AuthService(
-
             AuthRepository repository,
-
-            PasswordEncoder encoder
-
+            PasswordEncoder encoder,
+            JwtUtil jwtUtil,
+            RefreshTokenService refreshService
     ){
-
-        this.repository=repository;
-
-        this.encoder=encoder;
-
+        this.repository = repository;
+        this.encoder = encoder;
+        this.jwtUtil = jwtUtil;
+        this.refreshService = refreshService;
     }
 
 
 
-    public AuthUser signup(
-
-            SignupRequest request
-
-    ){
-
-
-        AuthUser user=
-
+    public AuthUser signup(SignupRequest request)
+    {
+        AuthUser user =
                 AuthUser.builder()
 
-                        .name(request.getName())
+                        .name(
+                                request.getName()
+                        )
 
-                        .email(request.getEmail())
+                        .email(
+                                request.getEmail()
+                        )
 
                         .password(
 
@@ -69,71 +63,121 @@ public class AuthService {
 
                         )
 
-                        .provider("LOCAL")
+                        .provider(
+                                "LOCAL"
+                        )
+
+                        .role(
+                                Role.USER
+                        )
 
                         .build();
 
 
-        return repository.save(user);
+        AuthUser savedUser =
+                repository.save(user);
+
+
+        log.info(
+
+                "ACTION={} service={} user={} details={}",
+
+                "USER_SIGNUP",
+
+                "AUTH-SERVICE",
+
+                savedUser.getEmail(),
+
+                "New local account created"
+
+        );
+
+
+        return savedUser;
 
     }
 
 
 
-    public Map<String,String> login(
-
-            LoginRequest request
-
-    ){
-
-
-        AuthUser user=
-
+    public AuthResponse login(LoginRequest request)
+    {
+        AuthUser user =
                 repository.findByEmail(
-
                         request.getEmail()
-
                 ).orElseThrow();
 
 
-
         if(
-
                 !encoder.matches(
-
                         request.getPassword(),
-
                         user.getPassword()
-
                 )
-
         ){
 
-            throw new RuntimeException(
 
-                    "Wrong password"
+            log.warn(
+
+                    "ACTION={} service={} user={} details={}",
+
+                    "LOGIN_FAILED",
+
+                    "AUTH-SERVICE",
+
+                    request.getEmail(),
+
+                    "Invalid password attempt"
 
             );
 
+
+            throw new RuntimeException(
+                    "Wrong password"
+            );
+
+
         }
 
+        String access = jwtUtil.generateAccessToken(user.getEmail(), user.getRole().name());
+        RefreshToken refresh = refreshService.create(user);
 
-        String token=
+        log.info(
 
-                JwtUtil.generateToken(
+                "ACTION={} service={} user={} details={}",
 
-                        user.getEmail()
+                "LOGIN_SUCCESS",
 
-                );
+                "AUTH-SERVICE",
 
+                user.getEmail(),
 
-        return Map.of(
-
-                "token",
-
-                token
+                "JWT access and refresh tokens generated"
 
         );
+
+        return AuthResponse
+                .builder()
+
+                .accessToken(
+                        access
+                )
+
+                .refreshToken(
+                        refresh.getToken()
+                )
+
+                .userId(
+                        user.getId()
+                )
+
+                .email(
+                        user.getEmail()
+                )
+
+                .role(
+                        user.getRole().name()
+                )
+
+                .build();
 
     }
 

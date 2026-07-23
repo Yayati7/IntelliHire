@@ -1,15 +1,19 @@
 package com.intellihire.user.service;
 
+import com.intellihire.user.dto.UpdateUserDto;
 import com.intellihire.user.dto.UserRequestDto;
 import com.intellihire.user.entity.UserProfile;
 import com.intellihire.user.repository.UserRepository;
-import com.intellihire.user.dto.UpdateUserDto;
+import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -24,21 +28,35 @@ public class UserService {
             UserRequestDto dto
     ) {
 
-        UserProfile user = UserProfile.builder()
+        UserProfile user =
+                UserProfile.builder()
 
-                .name(dto.getName())
-                .email(dto.getEmail())
-                .location(dto.getLocation())
-                .summary(dto.getSummary())
+                        .name(dto.getName())
+                        .email(dto.getEmail())
+                        .location(dto.getLocation())
+                        .summary(dto.getSummary())
 
-                .build();
+                        .build();
 
-        return userRepository.save(user);
+        UserProfile savedUser =
+                userRepository.save(user);
+
+        log.info(
+                "ACTION={} service={} user={} details={}",
+                "PROFILE_CREATED",
+                "USER-SERVICE",
+                savedUser.getId(),
+                "New user profile created"
+        );
+
+        return savedUser;
+
     }
 
     public List<UserProfile> getAllUsers(){
 
         return userRepository.findAll();
+
     }
 
     public UserProfile getUserById(
@@ -74,8 +92,32 @@ public class UserService {
                 dto.getSummary()
         );
 
-        return userRepository.save(
-                user
+        UserProfile updatedUser =
+                userRepository.save(
+                        user
+                );
+
+        log.info(
+                "ACTION={} service={} user={} details={}",
+                "PROFILE_UPDATED",
+                "USER-SERVICE",
+                updatedUser.getId(),
+                "User profile information updated"
         );
+
+        return updatedUser;
+
+    }
+
+    public Map<String, Long> getUserCount(){
+
+        return Map.of(
+
+                "count",
+
+                userRepository.count()
+
+        );
+
     }
 }

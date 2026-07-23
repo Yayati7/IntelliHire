@@ -1,0 +1,17 @@
+.developer-layout{
+
+display:flex;
+
+min-height:100vh;
+
+background:#f5f7fb;
+
+}
+
+.developer-content{
+
+flex:1;
+
+padding:35px;
+
+}

@@ -7,9 +7,24 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface JobRepository
-        extends JpaRepository<Job,Long> {
-    List<Job> findByLocation(
-            String location
+        extends JpaRepository<Job,Long>{
+
+    List<Job> findByRecruiterId(
+
+            Long recruiterId
+
+    );
+
+    List<Job>
+
+    findByTitleContainingIgnoreCaseAndLocationContainingIgnoreCaseAndSkillsContainingIgnoreCase(
+
+            String title,
+
+            String location,
+
+            String skills
+
     );
 
 }

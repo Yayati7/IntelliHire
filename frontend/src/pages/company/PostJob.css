@@ -1,0 +1,33 @@
+.post-job{
+
+max-width:800px;
+
+margin:auto;
+
+padding:30px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:18px;
+
+}
+
+.post-job input,
+
+.post-job textarea{
+
+padding:12px;
+
+font-size:15px;
+
+}
+
+.post-job button{
+
+padding:14px;
+
+cursor:pointer;
+
+}

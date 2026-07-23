@@ -1,29 +1,10 @@
-import {
-    BrowserRouter,
-    Routes,
-    Route
-} from "react-router-dom";
-
-import Login from "./pages/Login";
-import LoginSuccess from "./pages/LoginSuccess";
+import AppRoutes from "./routes/AppRoutes";
 
 
 function App() {
-    return (
-        <BrowserRouter>
-            <Routes>
-                <Route
-                    path="/"
-                    element={<Login />}
-                />
 
-                <Route
-                    path="/login-success"
-                    element={<LoginSuccess />}
-                />
-            </Routes>
-        </BrowserRouter>
-    );
+    return <AppRoutes />;
+
 }
 
 export default App;

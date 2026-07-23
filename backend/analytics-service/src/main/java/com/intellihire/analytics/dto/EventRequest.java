@@ -1,6 +1,7 @@
 package com.intellihire.analytics.dto;
 
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 
@@ -10,7 +11,12 @@ import lombok.*;
 @AllArgsConstructor
 public class EventRequest {
 
-
+    @NotBlank(message="Event Type required")
     private String eventType;
 
+    private Long userId;
+
+    private String service;
+
+    private String details;
 }

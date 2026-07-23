@@ -25,4 +25,11 @@ public class AnalyticsEvent {
     private String eventType;
 
     private LocalDateTime timestamp;
+
+    private Long userId;
+
+    private String service;
+
+    @Column(columnDefinition="TEXT")
+    private String details;
 }

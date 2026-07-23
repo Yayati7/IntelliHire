@@ -11,4 +11,6 @@ public interface ResumeRepository
     List<Resume> findByUserId(
             Long userId
     );
+
+    Optional<Resume> findFirstByUserId(Long userId);
 }

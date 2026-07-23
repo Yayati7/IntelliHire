@@ -1,11 +1,13 @@
 package com.intellihire.analytics.controller;
 
 
+import com.intellihire.analytics.dto.DashboardResponse;
 import com.intellihire.analytics.dto.EventRequest;
 
 import com.intellihire.analytics.entity.AnalyticsEvent;
 
 import com.intellihire.analytics.service.AnalyticsService;
+import jakarta.validation.Valid;
 
 
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,7 @@ public class AnalyticsController {
     @PostMapping
     public AnalyticsEvent save(
 
+            @Valid
             @RequestBody EventRequest request
 
     ){
@@ -48,6 +51,14 @@ public class AnalyticsController {
     public List<AnalyticsEvent> all(){
 
         return service.all();
+
+    }
+
+    @GetMapping("/dashboard")
+
+    public DashboardResponse dashboard(){
+
+        return service.dashboard();
 
     }
 

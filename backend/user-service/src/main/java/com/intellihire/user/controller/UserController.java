@@ -4,6 +4,8 @@ import com.intellihire.user.dto.UpdateUserDto;
 import com.intellihire.user.dto.UserRequestDto;
 import com.intellihire.user.entity.UserProfile;
 import com.intellihire.user.service.UserService;
+import jakarta.validation.Valid;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ public class UserController {
 
     @PostMapping
     public UserProfile createUser(
+            @Valid
             @RequestBody UserRequestDto dto
     ){
 
@@ -51,6 +54,7 @@ public class UserController {
 
             @PathVariable Long id,
 
+            @Valid
             @RequestBody UpdateUserDto dto
     ){
 
@@ -58,5 +62,12 @@ public class UserController {
                 id,
                 dto
         );
+    }
+
+    @GetMapping("/count")
+    public Map<String, Long> getUserCount(){
+
+        return userService.getUserCount();
+
     }
 }

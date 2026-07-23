@@ -1,0 +1,15 @@
+.footer{
+
+    background:#0f172a;
+
+    color:white;
+
+    padding:60px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}

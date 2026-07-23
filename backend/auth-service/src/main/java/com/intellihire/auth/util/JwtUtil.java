@@ -1,39 +1,121 @@
 package com.intellihire.auth.util;
 
-import io.jsonwebtoken.Jwts;
+
+import io.jsonwebtoken.*;
+
 import io.jsonwebtoken.security.Keys;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import org.springframework.stereotype.Component;
 
+
+import java.security.Key;
+
+import java.util.*;
+
+
+
+@Component
 public class JwtUtil {
 
-    private static final String SECRET =
-            "INTELLIHIRE_SECRET_KEY_2026_INTELLIHIRE_SECRET_KEY_2026";
 
-    private static final SecretKey KEY =
-            Keys.hmacShaKeyFor(
-                    SECRET.getBytes(StandardCharsets.UTF_8)
-            );
 
-    public static String generateToken(String email) {
+    private final String SECRET =
+
+            "12345678901234567890123456789012";
+
+
+
+    private Key key(){
+
+        return Keys.hmacShaKeyFor(
+
+                SECRET.getBytes()
+
+        );
+
+    }
+
+
+
+    public String generateAccessToken(
+
+            String email,
+
+            String role
+
+    ){
+
 
         return Jwts.builder()
 
+
                 .subject(email)
+
+
+                .claim(
+                        "role",
+                        role
+                )
+
 
                 .issuedAt(new Date())
 
+
                 .expiration(
+
                         new Date(
+
                                 System.currentTimeMillis()
-                                        + 86400000
+
+                                        + 900000
+
                         )
+
                 )
 
-                .signWith(KEY)
+                .signWith(key())
 
                 .compact();
+
     }
+
+
+
+    public boolean validate(
+
+            String token
+
+    ){
+
+        try{
+
+
+            Jwts.parser()
+
+                    .verifyWith(
+
+                            (javax.crypto.SecretKey)
+
+                                    key()
+
+                    )
+
+                    .build()
+
+                    .parseSignedClaims(token);
+
+
+            return true;
+
+
+        }catch(Exception e){
+
+
+            return false;
+
+        }
+
+    }
+
+
 }

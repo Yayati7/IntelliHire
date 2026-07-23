@@ -1,0 +1,41 @@
+{
+  "title": "IntelliHire Overview",
+  "uid": "intellihire-overview",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 3,
+
+  "panels": [
+    {
+      "type": "logs",
+      "title": "All Service Logs",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 10
+      },
+      "targets": [
+        {
+          "expr": "{service=~\".+\"}"
+        }
+      ]
+    },
+
+    {
+      "type": "logs",
+      "title": "ERROR Logs",
+      "gridPos": {
+        "x": 0,
+        "y": 10,
+        "w": 24,
+        "h": 8
+      },
+      "targets": [
+        {
+          "expr": "{service=~\".+\"} |= \"ERROR\""
+        }
+      ]
+    }
+  ]
+}

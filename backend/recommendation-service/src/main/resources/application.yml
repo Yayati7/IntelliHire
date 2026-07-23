@@ -2,16 +2,73 @@ server:
   port: 8085
 
 spring:
+
   application:
     name: RECOMMENDATION-SERVICE
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/recommendationdb?options=-c%20TimeZone=UTC
+    username: postgres
+    password: postgres123
+    hikari:
+      connection-init-sql: SET TIME ZONE 'UTC';
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+  jackson:
+    time-zone: UTC
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://localhost:8761/eureka/
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
+logging:
+
+  level:
+
+    root: INFO
+
+    com.intellihire: DEBUG
+
+    org.springframework.web: DEBUG
+
+    org.hibernate.SQL: DEBUG
+
+    org.springframework.cloud.openfeign: DEBUG
+
+    org.hibernate.orm.jdbc.bind: TRACE
+
+    feign: DEBUG
+
+  file:
+
+    name: logs/recommendation-service/app.log
+
+  logback:
+
+    rollingpolicy:
+
+      max-file-size: 50MB
+
+      max-history: 90
+
+      total-size-cap: 5GB
+
+      file-name-pattern: logs/recommendation-service/archive/app-%d{yyyy-MM-dd}.%i.log.gz

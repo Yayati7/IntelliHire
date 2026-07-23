@@ -15,4 +15,6 @@ public class ResumeDto {
     private String fileName;
 
     private String filePath;
+
+    private String extractedText;
 }

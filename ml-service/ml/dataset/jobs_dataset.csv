@@ -1,0 +1,5 @@
+job_id,title,description,skills,label
+1,Backend Developer,Spring Boot microservice development,"java,spring boot,docker",1
+2,ML Engineer,Machine learning model creation,"python,pytorch,ml",1
+3,Designer,Create UI graphics,"photoshop,figma",0
+4,Data Engineer,Build data pipelines,"python,sql,aws",1

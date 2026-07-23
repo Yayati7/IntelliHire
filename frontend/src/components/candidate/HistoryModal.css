@@ -1,0 +1,49 @@
+.modal-overlay{
+
+position:fixed;
+
+left:0;
+
+top:0;
+
+right:0;
+
+bottom:0;
+
+background:rgba(0,0,0,.4);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+}
+
+.modal{
+
+background:white;
+
+padding:35px;
+
+width:650px;
+
+border-radius:15px;
+
+}
+
+.history-job{
+
+padding:12px 0;
+
+border-bottom:1px solid #ddd;
+
+}
+
+.modal button{
+
+margin-top:25px;
+
+padding:10px 22px;
+
+}

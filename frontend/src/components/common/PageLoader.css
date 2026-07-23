@@ -1,0 +1,15 @@
+.loader{
+
+height:250px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:24px;
+
+font-weight:bold;
+
+}

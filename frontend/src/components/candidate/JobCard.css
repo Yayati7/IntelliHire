@@ -1,0 +1,51 @@
+.job-card{
+
+background:white;
+
+padding:25px;
+
+border-radius:15px;
+
+box-shadow:0 5px 20px rgba(0,0,0,.1);
+
+margin-bottom:25px;
+
+}
+
+.job-card h2{
+
+margin-bottom:15px;
+
+}
+
+.job-card p{
+
+margin:8px 0;
+
+}
+
+.job-card button{
+
+margin-top:20px;
+
+padding:12px 28px;
+
+background:#2563eb;
+
+color:white;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+.job-card button:disabled{
+
+background:gray;
+
+cursor:not-allowed;
+
+}

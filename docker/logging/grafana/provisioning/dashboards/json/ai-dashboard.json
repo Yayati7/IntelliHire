@@ -1,0 +1,57 @@
+{
+  "title":"AI Recommendation Monitoring",
+
+  "uid":"ai-dashboard",
+
+  "schemaVersion":39,
+
+  "version":2,
+
+
+  "panels":[
+
+
+    {
+      "type":"logs",
+
+      "title":"AI Activity",
+
+      "gridPos":{
+        "x":0,
+        "y":0,
+        "w":24,
+        "h":10
+      },
+
+      "targets":[
+        {
+          "expr":"{service=\"RECOMMENDATION-SERVICE\"}"
+        }
+      ]
+
+    },
+
+
+    {
+      "type":"logs",
+
+      "title":"Skill Extraction",
+
+      "gridPos":{
+        "x":0,
+        "y":10,
+        "w":24,
+        "h":8
+      },
+
+      "targets":[
+        {
+          "expr":"{service=\"RECOMMENDATION-SERVICE\"} |~ \"SKILL|skill|recommend|Recommendation|AI\""
+        }
+      ]
+
+    }
+
+  ]
+
+}

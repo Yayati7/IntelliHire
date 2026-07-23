@@ -1,0 +1,27 @@
+.feature-card{
+
+    width:320px;
+
+    padding:30px;
+
+    border-radius:18px;
+
+    background:#ffffff;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.12);
+
+}
+
+.feature-card h3{
+
+    margin-bottom:12px;
+
+}
+
+.feature-card p{
+
+    color:#666;
+
+    line-height:26px;
+
+}

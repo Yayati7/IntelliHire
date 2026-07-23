@@ -1,0 +1,35 @@
+.resume-status{
+
+background:white;
+
+padding:30px;
+
+border-radius:15px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:30px;
+
+box-shadow:0 5px 18px rgba(0,0,0,.08);
+
+}
+
+.resume-status button{
+
+background:#2563eb;
+
+color:white;
+
+border:none;
+
+padding:12px 24px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}

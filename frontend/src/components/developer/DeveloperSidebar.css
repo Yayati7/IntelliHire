@@ -1,0 +1,41 @@
+.developer-sidebar{
+
+width:240px;
+
+background:#111827;
+
+display:flex;
+
+flex-direction:column;
+
+padding:30px;
+
+gap:18px;
+
+}
+
+.developer-sidebar h2{
+
+color:white;
+
+margin-bottom:35px;
+
+}
+
+.developer-sidebar a{
+
+text-decoration:none;
+
+padding:12px;
+
+border-radius:8px;
+
+color:white;
+
+}
+
+.developer-sidebar a.active{
+
+background:#2563eb;
+
+}

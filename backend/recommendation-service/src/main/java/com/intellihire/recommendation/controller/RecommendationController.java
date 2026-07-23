@@ -1,18 +1,11 @@
 package com.intellihire.recommendation.controller;
 
-import com.intellihire.recommendation.dto.JobDto;
-
-import com.intellihire.recommendation.dto.RecommendationResponse;
+import com.intellihire.recommendation.dto.MlRecommendationResult;
 import com.intellihire.recommendation.service.RecommendationService;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-import java.util.Map;
-
 @RestController
-
 @RequestMapping("/recommendation")
 public class RecommendationController {
 
@@ -25,13 +18,18 @@ public class RecommendationController {
     }
 
     @GetMapping("/{userId}")
-    public List<RecommendationResponse> recommend(
+    public MlRecommendationResult recommend(
 
             @PathVariable Long userId
 
-    ){
+    ) {
 
-        return service
-                .recommendJobs(userId);
+        return service.recommendJobs(
+
+                userId
+
+        );
+
     }
+
 }

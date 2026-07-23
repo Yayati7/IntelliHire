@@ -4,8 +4,16 @@ import com.intellihire.user.entity.Resume;
 import com.intellihire.user.repository.ResumeRepository;
 import com.intellihire.user.service.ResumeService;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import jakarta.validation.constraints.NotNull;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/resume")
@@ -29,7 +37,9 @@ public class ResumeController {
     @PostMapping("/upload")
     public Resume upload(
 
-            @RequestParam Long userId,
+            @RequestParam
+            @NotNull(message="User Id required")
+            Long userId,
 
             @RequestParam MultipartFile file
 
@@ -65,5 +75,46 @@ public class ResumeController {
                 .getResumeByUserId(
                         userId
                 );
+    }
+
+    @GetMapping("/download/{userId}")
+    public ResponseEntity<Resource> download(
+
+            @PathVariable Long userId
+
+    ) throws Exception{
+
+        Resume resume=
+
+                resumeService.getResumeByUserId(userId);
+
+        Path path=
+
+                Paths.get(
+
+                        resume.getFilePath()
+
+                );
+
+        Resource resource=
+
+                new UrlResource(
+
+                        path.toUri()
+
+                );
+
+        return ResponseEntity.ok()
+
+                .header(
+
+                        HttpHeaders.CONTENT_DISPOSITION,
+
+                        "attachment; filename="+resume.getFileName()
+
+                )
+
+                .body(resource);
+
     }
 }

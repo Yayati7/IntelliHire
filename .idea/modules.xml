@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/IntelliHire.iml" filepath="$PROJECT_DIR$/.idea/IntelliHire.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/api-gateway/api-gateway.iml" filepath="$PROJECT_DIR$/backend/api-gateway/api-gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/recommendation-service/recommendation-service.iml" filepath="$PROJECT_DIR$/backend/recommendation-service/recommendation-service.iml" />
     </modules>
   </component>
 </project>

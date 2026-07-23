@@ -1,0 +1,100 @@
+server:
+  port: 8081
+
+
+spring:
+
+  application:
+    name: AUTH-SERVICE
+
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/authdb
+    username: postgres
+    password: postgres123
+    hikari:
+      connection-init-sql: SET TIME ZONE 'UTC';
+
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+
+  jackson:
+    time-zone: UTC
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+
+            scope:
+              - email
+              - profile
+
+eureka:
+
+  client:
+
+    service-url:
+
+      defaultZone: http://localhost:8761/eureka/
+
+
+management:
+
+  endpoints:
+
+    web:
+
+      exposure:
+
+        include: "*"
+
+
+logging:
+
+  level:
+
+    root: INFO
+
+    com.intellihire: DEBUG
+
+    org.springframework.web: DEBUG
+
+    org.hibernate.SQL: DEBUG
+
+    org.springframework.cloud.openfeign: DEBUG
+
+    org.hibernate.orm.jdbc.bind: TRACE
+
+    feign: DEBUG
+
+
+  file:
+
+    name: logs/auth-service/app.log
+
+
+  logback:
+
+    rollingpolicy:
+
+      max-file-size: 50MB
+
+      max-history: 90
+
+      total-size-cap: 5GB
+
+      file-name-pattern: logs/auth-service/archive/app-%d{yyyy-MM-dd}.%i.log.gz

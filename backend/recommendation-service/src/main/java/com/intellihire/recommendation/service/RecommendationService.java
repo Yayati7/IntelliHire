@@ -1,26 +1,27 @@
 package com.intellihire.recommendation.service;
 
-import com.intellihire.recommendation.client.JobClient;
-import com.intellihire.recommendation.client.UserClient;
-import com.intellihire.recommendation.client.MlClient;
 import com.intellihire.recommendation.client.AnalyticsClient;
+import com.intellihire.recommendation.client.JobClient;
+import com.intellihire.recommendation.client.MlClient;
+import com.intellihire.recommendation.client.UserClient;
 
 import com.intellihire.recommendation.dto.JobDto;
 import com.intellihire.recommendation.dto.ResumeDto;
-import com.intellihire.recommendation.dto.RecommendationResponse;
+
+import com.intellihire.recommendation.dto.MlJobDto;
+import com.intellihire.recommendation.dto.MlRecommendationRequest;
+import com.intellihire.recommendation.dto.MlRecommendationResult;
+
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-
+@Slf4j
 @Service
 public class RecommendationService {
-
 
     private final UserClient userClient;
 
@@ -28,15 +29,10 @@ public class RecommendationService {
 
     private final MlClient mlClient;
 
-    private final MatchingService matchingService;
-
-    private final ExplainabilityService explainabilityService;
-
-    private final SkillGapService skillGapService;
-
     private final AnalyticsClient analyticsClient;
 
-
+    // STEP 2
+    private final RecommendationHistoryService historyService;
 
     public RecommendationService(
 
@@ -46,177 +42,199 @@ public class RecommendationService {
 
             MlClient mlClient,
 
-            MatchingService matchingService,
+            AnalyticsClient analyticsClient,
 
-            ExplainabilityService explainabilityService,
-
-            SkillGapService skillGapService,
-
-            AnalyticsClient analyticsClient
+            RecommendationHistoryService historyService
 
     ) {
 
-        this.userClient = userClient;
+        this.userClient =
+                userClient;
 
-        this.jobClient = jobClient;
+        this.jobClient =
+                jobClient;
 
-        this.mlClient = mlClient;
-
-        this.matchingService = matchingService;
-
-        this.explainabilityService =
-                explainabilityService;
-
-        this.skillGapService =
-                skillGapService;
+        this.mlClient =
+                mlClient;
 
         this.analyticsClient =
                 analyticsClient;
+
+        // STEP 2
+        this.historyService =
+                historyService;
+
     }
 
+    public MlRecommendationResult recommendJobs(
 
-
-    public List<RecommendationResponse> recommendJobs(
             Long userId
-    ){
 
+    ) {
 
         ResumeDto resume =
+
                 userClient.getResume(
+
                         userId
+
                 );
 
+        if (
 
-        Map parsed =
-                mlClient.parseResume(
-                        resume.getFilePath()
-                );
+                resume.getExtractedText() == null
 
+                        ||
 
-        List<String> resumeSkills =
-                (List<String>)
-                        parsed.get(
-                                "skills"
-                        );
+                        resume.getExtractedText().isBlank()
 
+        ) {
 
-        List<JobDto> jobs =
-                jobClient.getAllJobs();
+            throw new RuntimeException(
 
+                    "Resume text not available. Please upload resume again."
 
+            );
 
-        List<RecommendationResponse> recommendations =
-                new ArrayList<>();
-
-
-
-        for(
-                JobDto job : jobs
-        ){
-
-
-            List<String> jobSkills =
-
-                    Arrays.stream(
-
-                                    job.getSkills()
-                                            .split(",")
-
-                            )
-
-                            .map(
-                                    String::trim
-                            )
-
-                            .toList();
-
-
-
-            int score =
-                    matchingService.calculateMatch(
-
-                            resumeSkills,
-
-                            jobSkills
-                    );
-
-
-
-            List<String> missingSkills =
-                    skillGapService.findMissingSkills(
-
-                            resumeSkills,
-
-                            jobSkills
-                    );
-
-
-
-            if(
-                    score >= 25
-            ){
-
-
-                RecommendationResponse r =
-
-                        RecommendationResponse
-                                .builder()
-
-                                .jobId(
-                                        job.getId()
-                                )
-
-                                .title(
-                                        job.getTitle()
-                                )
-
-                                .company(
-                                        job.getCompany()
-                                )
-
-                                .matchPercentage(
-                                        score
-                                )
-
-                                .explanation(
-
-                                        explainabilityService
-                                                .generateExplanation(
-
-                                                        resumeSkills,
-
-                                                        score
-                                                )
-                                )
-
-                                .missingSkills(
-
-                                        missingSkills
-                                )
-
-                                .build();
-
-
-
-                recommendations.add(
-                        r
-                );
-            }
         }
 
+        List<JobDto> jobs =
 
+                jobClient.getAllJobs();
 
-        recommendations.sort(
+        List<MlJobDto> mlJobs =
 
-                Comparator.comparing(
+                jobs.stream()
 
-                        RecommendationResponse::
-                                getMatchPercentage
+                        .map(
 
-                ).reversed()
+                                job ->
+
+                                        MlJobDto.builder()
+
+                                                .id(
+
+                                                        job.getId()
+
+                                                )
+
+                                                .title(
+
+                                                        job.getTitle()
+
+                                                )
+
+                                                .description(
+
+                                                        job.getDescription()
+
+                                                )
+
+                                                .skills(
+
+                                                        job.getSkills()
+
+                                                )
+
+                                                .company(job.getCompany())
+                                                .location(job.getLocation())
+
+                                                .build()
+
+                        )
+
+                        .toList();
+
+        MlRecommendationRequest request =
+
+                MlRecommendationRequest
+
+                        .builder()
+
+                        .resume_text(
+
+                                resume.getExtractedText()
+
+                        )
+
+                        .jobs(
+
+                                mlJobs
+
+                        )
+
+                        .build();
+
+        log.info(
+
+                "ACTION={} service={} user={} details={}",
+
+                "AI_RECOMMENDATION_STARTED",
+
+                "RECOMMENDATION-SERVICE",
+
+                userId,
+
+                "Resume characters="
+
+                        +
+
+                        resume.getExtractedText().length()
+
         );
 
+        MlRecommendationResult result =
 
+                mlClient.recommend(
+
+                        request
+
+                );
+
+        // STEP 4
+        log.info(
+
+                "ACTION={} service={} user={} details={}",
+
+                "TOP5_RECOMMENDATIONS",
+
+                "RECOMMENDATION-SERVICE",
+
+                userId,
+
+                "Saving Top 5 recommendation history"
+
+        );
+
+        // STEP 3
+        historyService.saveRecommendationHistory(
+
+                userId,
+
+                resume.getId(),
+
+                "all-MiniLM-L6-v2",
+
+                jobs.size(),
+
+                result.getRecommendations()
+
+        );
+
+        // STEP 4
+        log.info(
+
+                "ACTION={} service={} user={} details={}",
+
+                "TOP5_RECOMMENDATIONS_SAVED",
+
+                "RECOMMENDATION-SERVICE",
+
+                userId,
+
+                "History successfully saved"
+
+        );
 
         analyticsClient.saveEvent(
 
@@ -224,15 +242,32 @@ public class RecommendationService {
 
                         "eventType",
 
-                        "RECOMMENDATION_GENERATED"
+                        "AI_RECOMMENDATION_GENERATED"
 
                 )
 
         );
 
+        log.info(
 
+                "ACTION={} service={} user={} details={}",
 
-        return recommendations;
+                "AI_RECOMMENDATION_COMPLETED",
+
+                "RECOMMENDATION-SERVICE",
+
+                userId,
+
+                "Recommendations="
+
+                        +
+
+                        result.getRecommendations().size()
+
+        );
+
+        return result;
+
     }
 
 }

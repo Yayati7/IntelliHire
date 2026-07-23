@@ -10,8 +10,6 @@ import com.intellihire.auth.service.AuthService;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 
 @RestController
 
@@ -28,9 +26,10 @@ public class AuthController {
 
     ){
 
-        this.service=service;
+        this.service = service;
 
     }
+
 
 
     @PostMapping("/signup")
@@ -49,7 +48,7 @@ public class AuthController {
 
     @PostMapping("/login")
 
-    public Map<String,String> login(
+    public AuthResponse login(
 
             @RequestBody LoginRequest request
 
