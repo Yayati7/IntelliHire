@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./Profile.css";
 
 import { useAuth } from "../../context/AuthContext";
+import { getUser, saveUserProfile } from "../../services/userService";
 
 export default function Profile() {
 
     const { user } = useAuth();
 
+    const navigate = useNavigate();
+
     const userId = user?.userId;
 
     const [profile, setProfile] = useState({
 
-        name: "",
+        name: user?.name || "",
 
-        email: "",
+        email: user?.email || "",
 
         location: "",
 
@@ -23,6 +27,8 @@ export default function Profile() {
     });
 
     const [resume, setResume] = useState(null);
+
+    const [saving, setSaving] = useState(false);
 
     useEffect(() => {
 
@@ -40,19 +46,26 @@ export default function Profile() {
 
         try {
 
-            const res = await axios.get(
+            const res = await getUser(userId);
 
-                `http://localhost:8082/user/${userId}`
-
-            );
-
-            setProfile(res.data);
+            setProfile({
+                name: res.name || user?.name || "",
+                email: res.email || user?.email || "",
+                location: res.location || "",
+                summary: res.summary || ""
+            });
 
         }
 
         catch (e) {
 
-            console.log(e);
+            // No profile saved yet — prefill just the known signup details,
+            // leave the rest blank until the user fills and saves.
+            setProfile(prev => ({
+                ...prev,
+                name: user?.name || "",
+                email: user?.email || ""
+            }));
 
         }
 
@@ -82,23 +95,21 @@ export default function Profile() {
 
     async function saveProfile() {
 
+        setSaving(true);
+
         try {
 
-            await axios.put(
+            await saveUserProfile(userId, {
 
-                `http://localhost:8082/user/${userId}`,
+                name: profile.name,
 
-                {
+                email: profile.email,
 
-                    name: profile.name,
+                location: profile.location,
 
-                    location: profile.location,
+                summary: profile.summary
 
-                    summary: profile.summary
-
-                }
-
-            );
+            });
 
             alert("Profile Updated");
 
@@ -107,6 +118,14 @@ export default function Profile() {
         catch (e) {
 
             console.log(e);
+
+            alert(e?.response?.data?.message || "Could not save profile.");
+
+        }
+
+        finally {
+
+            setSaving(false);
 
         }
 
@@ -129,6 +148,13 @@ export default function Profile() {
         <div className="profile-page">
 
             <h2>My Profile</h2>
+
+            <button
+                style={{ marginBottom: 20, padding: "10px 20px", cursor: "pointer" }}
+                onClick={() => navigate("/candidate/home")}
+            >
+                ← Back to Home
+            </button>
 
             <div className="profile-card">
 
@@ -164,6 +190,8 @@ export default function Profile() {
 
                     onChange={updateField}
 
+                    placeholder="Not set yet"
+
                 />
 
                 <label>Summary</label>
@@ -178,15 +206,19 @@ export default function Profile() {
 
                     onChange={updateField}
 
+                    placeholder="Not set yet"
+
                 />
 
                 <button
 
                     onClick={saveProfile}
 
+                    disabled={saving}
+
                 >
 
-                    Save Changes
+                    {saving ? "Saving..." : "Save Changes"}
 
                 </button>
 

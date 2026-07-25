@@ -42,59 +42,33 @@ public class AuthService {
 
     public AuthUser signup(SignupRequest request)
     {
+        Role role = Role.USER;
+
+        if ("RECRUITER".equalsIgnoreCase(request.getRole())) {
+            role = Role.RECRUITER;
+        }
+        // ADMIN can never be created via signup, regardless of what's sent
+
         AuthUser user =
                 AuthUser.builder()
-
-                        .name(
-                                request.getName()
-                        )
-
-                        .email(
-                                request.getEmail()
-                        )
-
-                        .password(
-
-                                encoder.encode(
-
-                                        request.getPassword()
-
-                                )
-
-                        )
-
-                        .provider(
-                                "LOCAL"
-                        )
-
-                        .role(
-                                Role.USER
-                        )
-
+                        .name(request.getName())
+                        .email(request.getEmail())
+                        .password(encoder.encode(request.getPassword()))
+                        .provider("LOCAL")
+                        .role(role)
                         .build();
 
-
-        AuthUser savedUser =
-                repository.save(user);
-
+        AuthUser savedUser = repository.save(user);
 
         log.info(
-
                 "ACTION={} service={} user={} details={}",
-
                 "USER_SIGNUP",
-
                 "AUTH-SERVICE",
-
                 savedUser.getEmail(),
-
-                "New local account created"
-
+                "New local account created as " + role
         );
 
-
         return savedUser;
-
     }
 
 
@@ -102,83 +76,54 @@ public class AuthService {
     public AuthResponse login(LoginRequest request)
     {
         AuthUser user =
-                repository.findByEmail(
-                        request.getEmail()
-                ).orElseThrow();
+                repository.findByEmail(request.getEmail()).orElseThrow();
 
-
-        if(
-                !encoder.matches(
-                        request.getPassword(),
-                        user.getPassword()
-                )
-        ){
-
-
+        if (!"LOCAL".equals(user.getProvider())) {
             log.warn(
-
                     "ACTION={} service={} user={} details={}",
-
-                    "LOGIN_FAILED",
-
+                    "LOGIN_BLOCKED_WRONG_PROVIDER",
                     "AUTH-SERVICE",
-
                     request.getEmail(),
-
-                    "Invalid password attempt"
-
+                    "Account registered via " + user.getProvider() + ", not local password"
             );
-
-
             throw new RuntimeException(
-                    "Wrong password"
+                    "This email is registered via Google. Please use 'Login with Google'."
             );
-
-
         }
 
-        String access = jwtUtil.generateAccessToken(user.getEmail(), user.getRole().name());
+        if (!encoder.matches(request.getPassword(), user.getPassword())) {
+
+            log.warn(
+                    "ACTION={} service={} user={} details={}",
+                    "LOGIN_FAILED",
+                    "AUTH-SERVICE",
+                    request.getEmail(),
+                    "Invalid password attempt"
+            );
+
+            throw new RuntimeException("Wrong password");
+        }
+
+        String access = jwtUtil.generateAccessToken(user.getId(), user.getEmail(), user.getRole().name());
         RefreshToken refresh = refreshService.create(user);
 
         log.info(
-
                 "ACTION={} service={} user={} details={}",
-
                 "LOGIN_SUCCESS",
-
                 "AUTH-SERVICE",
-
                 user.getEmail(),
-
                 "JWT access and refresh tokens generated"
-
         );
 
         return AuthResponse
                 .builder()
-
-                .accessToken(
-                        access
-                )
-
-                .refreshToken(
-                        refresh.getToken()
-                )
-
-                .userId(
-                        user.getId()
-                )
-
-                .email(
-                        user.getEmail()
-                )
-
-                .role(
-                        user.getRole().name()
-                )
-
+                .accessToken(access)
+                .refreshToken(refresh.getToken())
+                .userId(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole().name())
                 .build();
-
     }
 
 }

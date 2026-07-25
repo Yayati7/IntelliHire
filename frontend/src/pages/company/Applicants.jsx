@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 
 import axios from "axios";
 
+import CompanyLayout from "../../layouts/CompanyLayout";
+
 import {
 
 getApplicantDetails
@@ -182,6 +184,8 @@ console.log(e);
 
 return(
 
+<CompanyLayout>
+
 <div className="applicants-page">
 
 <h2>
@@ -228,6 +232,10 @@ className="applicant-card"
 
 </p>
 
+{
+
+app.resumeFileName && (
+
 <a
 
 href={`http://localhost:8082/resume/download/${app.userId}`}
@@ -241,6 +249,10 @@ rel="noreferrer"
 📄 View Resume
 
 </a>
+
+)
+
+}
 
 <p>
 
@@ -285,6 +297,8 @@ Reject
 }
 
 </div>
+
+</CompanyLayout>
 
 );
 

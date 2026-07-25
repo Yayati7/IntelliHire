@@ -1,4 +1,4 @@
-import Navbar from "../components/common/Navbar";
+import CandidateNavbar from "../components/candidate/CandidateNavbar";
 import CandidateSidebar from "../components/candidate/CandidateSidebar";
 
 import "./CandidateLayout.css";
@@ -6,25 +6,14 @@ import "./CandidateLayout.css";
 export default function CandidateLayout({children}){
 
     return(
-
         <>
-
-            <Navbar/>
-
+            <CandidateNavbar/>
             <div className="candidate-layout">
-
                 <CandidateSidebar/>
-
                 <main className="candidate-main">
-
                     {children}
-
                 </main>
-
             </div>
-
         </>
-
     );
-
 }

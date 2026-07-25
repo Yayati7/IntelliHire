@@ -96,7 +96,7 @@ function applicants(id){
 
 navigate(
 
-"/company/applicants/"+id
+"/company/applicants/job/" + id
 
 );
 

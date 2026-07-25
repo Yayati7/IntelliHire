@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import CompanyLayout from "../../layouts/CompanyLayout";
 import "./PostJob.css";
 
 export default function PostJob() {
@@ -64,7 +65,9 @@ export default function PostJob() {
 
             console.log(e);
 
-            alert("Unable to post job");
+            const message = e?.response?.data?.message || "Unable to post job";
+
+            alert(message);
 
         }
 
@@ -72,68 +75,72 @@ export default function PostJob() {
 
     return (
 
-        <div className="post-job">
+        <CompanyLayout>
 
-            <h2>Post New Job</h2>
+            <div className="post-job">
 
-            <input
-                name="title"
-                placeholder="Job Title"
-                value={job.title}
-                onChange={handleChange}
-            />
+                <h2>Post New Job</h2>
 
-            <input
-                name="company"
-                placeholder="Company"
-                value={job.company}
-                onChange={handleChange}
-            />
+                <input
+                    name="title"
+                    placeholder="Job Title"
+                    value={job.title}
+                    onChange={handleChange}
+                />
 
-            <input
-                name="location"
-                placeholder="Location"
-                value={job.location}
-                onChange={handleChange}
-            />
+                <input
+                    name="company"
+                    placeholder="Company"
+                    value={job.company}
+                    onChange={handleChange}
+                />
 
-            <textarea
+                <input
+                    name="location"
+                    placeholder="Location"
+                    value={job.location}
+                    onChange={handleChange}
+                />
 
-                rows="8"
+                <textarea
 
-                name="description"
+                    rows="8"
 
-                placeholder="Job Description"
+                    name="description"
 
-                value={job.description}
+                    placeholder="Job Description"
 
-                onChange={handleChange}
+                    value={job.description}
 
-            />
+                    onChange={handleChange}
 
-            <input
+                />
 
-                name="skills"
+                <input
 
-                placeholder="Skills (comma separated)"
+                    name="skills"
 
-                value={job.skills}
+                    placeholder="Skills (comma separated)"
 
-                onChange={handleChange}
+                    value={job.skills}
 
-            />
+                    onChange={handleChange}
 
-            <button
+                />
 
-                onClick={createJob}
+                <button
 
-            >
+                    onClick={createJob}
 
-                Post Job
+                >
 
-            </button>
+                    Post Job
 
-        </div>
+                </button>
+
+            </div>
+
+        </CompanyLayout>
 
     );
 

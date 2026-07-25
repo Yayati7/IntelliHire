@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./../../styles/Navbar.css";
 
 export default function Navbar() {
 
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
 
     return (
 
@@ -44,17 +46,66 @@ export default function Navbar() {
 
             </ul>
 
-            <div className="nav-buttons">
+            <div
+                className="nav-buttons"
+                style={{ position: "relative" }}
+            >
 
-                <Link to="/login">
+                <button
+                    className="login-btn"
+                    onClick={() => setOpen(prev => !prev)}
+                >
+                    Login
+                </button>
 
-                    <button className="login-btn">
+                {open && (
 
-                        Login
+                    <div
+                        style={{
+                            position: "absolute",
+                            top: "48px",
+                            right: 0,
+                            background: "white",
+                            borderRadius: 10,
+                            boxShadow: "0 8px 25px rgba(0,0,0,.15)",
+                            overflow: "hidden",
+                            minWidth: 180,
+                            zIndex: 1000
+                        }}
+                    >
 
-                    </button>
+                        <div
+                            style={{
+                                padding: "14px 18px",
+                                cursor: "pointer",
+                                color: "#111827",
+                                borderBottom: "1px solid #eee"
+                            }}
+                            onClick={() => {
+                                setOpen(false);
+                                navigate("/login?role=USER");
+                            }}
+                        >
+                            Login as Candidate
+                        </div>
 
-                </Link>
+                        <div
+                            style={{
+                                padding: "14px 18px",
+                                cursor: "pointer",
+                                color: "#111827"
+                            }}
+                            onClick={() => {
+                                setOpen(false);
+                                navigate("/login?role=RECRUITER");
+                            }}
+                        >
+                            Login as Company
+                        </div>
+
+                    </div>
+
+                )}
 
             </div>
 

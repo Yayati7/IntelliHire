@@ -1,3 +1,4 @@
+import DeveloperNavbar from "../components/developer/DeveloperNavbar";
 import DeveloperSidebar from "../components/developer/DeveloperSidebar";
 import "./DeveloperLayout.css";
 
@@ -5,17 +6,20 @@ export default function DeveloperLayout({children}){
 
     return(
 
-        <div className="developer-layout">
+        <>
+            <DeveloperNavbar/>
+            <div className="developer-layout">
 
-            <DeveloperSidebar/>
+                <DeveloperSidebar/>
 
-            <main className="developer-content">
+                <main className="developer-content">
 
-                {children}
+                    {children}
 
-            </main>
+                </main>
 
-        </div>
+            </div>
+        </>
 
     );
 

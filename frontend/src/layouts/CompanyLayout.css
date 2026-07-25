@@ -17,3 +17,15 @@ padding:35px;
 overflow:auto;
 
 }
+
+.company-layout{
+
+display:flex;
+
+min-height:100vh;
+
+background:#f5f7fb;
+
+margin-top:75px;
+
+}

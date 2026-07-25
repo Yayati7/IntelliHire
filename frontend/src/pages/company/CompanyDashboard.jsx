@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import CompanyLayout from "../../layouts/CompanyLayout";
 
 import {
 
@@ -76,117 +77,121 @@ export default function CompanyDashboard() {
 
     return (
 
-        <div className="company-dashboard">
+        <CompanyLayout>
 
-            <div className="company-top">
+            <div className="company-dashboard">
 
-                <h2>My Posted Jobs</h2>
+                <div className="company-top">
 
-                <Link
+                    <h2>My Posted Jobs</h2>
 
-                    to="/company/post"
+                    <Link
 
-                >
-
-                    <button>
-
-                        + Post Job
-
-                    </button>
-
-                </Link>
-
-            </div>
-
-            {
-
-                jobs.map(job => (
-
-                    <div
-
-                        key={job.id}
-
-                        className="company-job-card"
+                        to="/company/post-job"
 
                     >
 
-                        <h3>
+                        <button>
 
-                            {job.title}
+                            + Post Job
 
-                        </h3>
+                        </button>
 
-                        <p>
+                    </Link>
 
-                            <b>Company :</b>
+                </div>
 
-                            {job.company}
+                {
 
-                        </p>
+                    jobs.map(job => (
 
-                        <p>
+                        <div
 
-                            <b>Location :</b>
+                            key={job.id}
 
-                            {job.location}
+                            className="company-job-card"
 
-                        </p>
+                        >
 
-                        <p>
+                            <h3>
 
-                            {job.description}
+                                {job.title}
 
-                        </p>
+                            </h3>
 
-                        <div className="company-actions">
+                            <p>
 
-                            <Link
+                                <b>Company :</b>
 
-                                to={`/company/job/${job.id}`}
+                                {job.company}
 
-                            >
+                            </p>
 
-                                <button>
+                            <p>
 
-                                    Applicants
+                                <b>Location :</b>
+
+                                {job.location}
+
+                            </p>
+
+                            <p>
+
+                                {job.description}
+
+                            </p>
+
+                            <div className="company-actions">
+
+                                <Link
+
+                                    to={`/company/applicants/job/${job.id}`}
+
+                                >
+
+                                    <button>
+
+                                        Applicants
+
+                                    </button>
+
+                                </Link>
+
+                                <Link
+
+                                    to={`/company/edit/${job.id}`}
+
+                                >
+
+                                    <button>
+
+                                        Edit
+
+                                    </button>
+
+                                </Link>
+
+                                <button
+
+                                    onClick={() => removeJob(job.id)}
+
+                                >
+
+                                    Delete
 
                                 </button>
 
-                            </Link>
-
-                            <Link
-
-                                to={`/company/edit/${job.id}`}
-
-                            >
-
-                                <button>
-
-                                    Edit
-
-                                </button>
-
-                            </Link>
-
-                            <button
-
-                                onClick={() => removeJob(job.id)}
-
-                            >
-
-                                Delete
-
-                            </button>
+                            </div>
 
                         </div>
 
-                    </div>
+                    ))
 
-                ))
+                }
 
-            }
+            </div>
 
-        </div>
+        </CompanyLayout>
 
     );
 

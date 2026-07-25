@@ -19,23 +19,7 @@ Dashboard
 
 </NavLink>
 
-<NavLink to="/developer/analytics">
 
-Analytics
-
-</NavLink>
-
-<NavLink to="/developer/system">
-
-System
-
-</NavLink>
-
-<NavLink to="/developer/logs">
-
-Logs
-
-</NavLink>
 
 </div>
 

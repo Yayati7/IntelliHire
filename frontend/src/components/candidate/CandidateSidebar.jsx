@@ -20,12 +20,6 @@ Dashboard
 
 </NavLink>
 
-<NavLink to="/candidate/jobs">
-
-Jobs
-
-</NavLink>
-
 <NavLink to="/candidate/applications">
 
 Applications

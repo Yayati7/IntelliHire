@@ -1,73 +1,37 @@
 import "./JobCard.css";
 
 export default function JobCard({
-
     job,
-
     resumeUploaded,
-
+    appliedStatus,
     onApply
-
 }){
 
+    const isApplied = appliedStatus === "APPLIED" || appliedStatus === "NEXT_ROUND";
+
+    let buttonLabel = "Apply";
+    if (!resumeUploaded) buttonLabel = "Upload Resume To Apply";
+    else if (isApplied) buttonLabel = "Applied";
+
     return(
-
         <div className="job-card">
+            <h2>{job.title}</h2>
+            <p><b>Company :</b> {job.company}</p>
+            <p><b>Location :</b> {job.location}</p>
 
-            <h2>
+            {
+                resumeUploaded && typeof job.finalScore === "number" &&
+                <p><b>AI Match :</b> {job.finalScore}%</p>
+            }
 
-                {job.title}
-
-            </h2>
-
-            <p>
-
-                <b>Company :</b> {job.company}
-
-            </p>
-
-            <p>
-
-                <b>Location :</b> {job.location}
-
-            </p>
-
-            <p>
-
-                <b>AI Match :</b> {job.finalScore}%
-
-            </p>
-
-            <p>
-
-                {job.description}
-
-            </p>
+            <p>{job.description}</p>
 
             <button
-
-                disabled={!resumeUploaded}
-
+                disabled={!resumeUploaded || isApplied}
                 onClick={()=>onApply(job.jobId)}
-
             >
-
-                {
-
-                    resumeUploaded ?
-
-                    "Apply"
-
-                    :
-
-                    "Upload Resume To Apply"
-
-                }
-
+                {buttonLabel}
             </button>
-
         </div>
-
     );
-
 }

@@ -7,6 +7,7 @@ import com.intellihire.user.service.UserService;
 import jakarta.validation.Valid;
 import java.util.Map;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,15 +25,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    public UserProfile createUser(
-            @Valid
-            @RequestBody UserRequestDto dto
-    ){
-
-        return userService.createUser(dto);
-    }
-
     @GetMapping
     public List<UserProfile> getUsers(){
 
@@ -40,28 +32,29 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserProfile getUser(
+    public ResponseEntity<?> getUser(
             @PathVariable Long id
     ){
 
-        return userService.getUserById(
-                id
-        );
+        try {
+            return ResponseEntity.ok(
+                    userService.getUserById(id)
+            );
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
-    public UserProfile updateUser(
+    public UserProfile createOrUpdateUser(
 
             @PathVariable Long id,
 
             @Valid
-            @RequestBody UpdateUserDto dto
+            @RequestBody UserRequestDto dto
     ){
 
-        return userService.updateUser(
-                id,
-                dto
-        );
+        return userService.createOrUpdateUser(id, dto);
     }
 
     @GetMapping("/count")

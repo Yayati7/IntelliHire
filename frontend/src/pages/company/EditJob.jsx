@@ -14,6 +14,8 @@ from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
 
+import CompanyLayout from "../../layouts/CompanyLayout";
+
 import "./PostJob.css";
 
 export default function EditJob(){
@@ -130,6 +132,8 @@ console.log(e);
 
 return(
 
+<CompanyLayout>
+
 <div className="post-job">
 
 <h2>
@@ -201,6 +205,8 @@ Update Job
 </button>
 
 </div>
+
+</CompanyLayout>
 
 );
 

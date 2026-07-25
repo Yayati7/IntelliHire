@@ -18,6 +18,10 @@ import PageLoader from "../../components/common/PageLoader";
 
 import { useAuth } from "../../context/AuthContext";
 
+import ResumeUploadModal from "../../components/candidate/ResumeUploadModal";
+import { uploadResume } from "../../services/resumeService";
+import { getUserApplicationDetails } from "../../services/applicationService";
+
 import {
     getUser
 } from "../../services/userService";
@@ -39,11 +43,8 @@ import {
 } from "../../services/jobService";
 
 import {
-
     getRecommendationHistory,
-
     getHistoryDetails
-
 } from "../../services/historyService";
 
 import "../../styles/CandidateDashboard.css";
@@ -79,6 +80,9 @@ useState([]);
 
 const[title,setTitle]=
 useState("");
+
+const [uploadOpen, setUploadOpen] = useState(false);
+const [appliedMap, setAppliedMap] = useState({});
 
 const[location,setLocation]=
 useState("");
@@ -130,6 +134,24 @@ await loadRecommendations();
 setResumeUploaded(false);
 
 await loadRandomJobs();
+
+}
+
+try{
+
+const apps = await getUserApplicationDetails(user.userId);
+
+const map = {};
+
+apps.forEach(a => {
+    map[a.jobId] = a.status;
+});
+
+setAppliedMap(map);
+
+}catch(e){
+
+setAppliedMap({});
 
 }
 
@@ -187,17 +209,19 @@ async function loadRandomJobs(){
 
 try{
 
-const data=
+const data = await searchJobs("", "");
 
-await searchJobs(
+const normalized = data.map(job => ({
 
-"",
+...job,
 
-""
+jobId: job.id,
 
-);
+finalScore: undefined
 
-setRecommendations(data);
+}));
+
+setRecommendations(normalized);
 
 }catch(e){
 
@@ -270,6 +294,11 @@ jobId
 
 );
 
+setAppliedMap(prev => ({
+    ...prev,
+    [jobId]: "APPLIED"
+}));
+
 toast.success(
 
 "Application submitted."
@@ -280,7 +309,7 @@ toast.success(
 
 toast.error(
 
-"Application failed."
+e?.response?.data?.message || "Application failed."
 
 );
 
@@ -332,9 +361,29 @@ name={name}
 
 resumeUploaded={resumeUploaded}
 
-onUpload={()=>{}}
+onUpload={() => setUploadOpen(true)}
 
-onUpdate={()=>{}}
+onUpdate={() => setUploadOpen(true)}
+
+/>
+
+<ResumeUploadModal
+
+open={uploadOpen}
+
+onClose={() => setUploadOpen(false)}
+
+onUpload={async (file) => {
+
+await uploadResume(user.userId, file);
+
+setResumeUploaded(true);
+
+await loadRecommendations();
+
+toast.success("Resume uploaded. Recommendations updated.");
+
+}}
 
 />
 
@@ -411,6 +460,8 @@ key={job.jobId}
 job={job}
 
 resumeUploaded={resumeUploaded}
+
+appliedStatus={appliedMap[job.jobId]}
 
 onApply={apply}
 

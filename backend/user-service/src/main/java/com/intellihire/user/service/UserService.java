@@ -24,32 +24,50 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserProfile createUser(
+    public UserProfile createOrUpdateUser(
+            Long id,
             UserRequestDto dto
     ) {
 
-        UserProfile user =
-                UserProfile.builder()
+        UserProfile profile = userRepository.findById(id)
+                .orElse(
+                        UserProfile.builder()
+                                .id(id)
+                                .build()
+                );
 
-                        .name(dto.getName())
-                        .email(dto.getEmail())
-                        .location(dto.getLocation())
-                        .summary(dto.getSummary())
+        // Merge: only overwrite a field if the caller actually sent it.
+        // This lets a lightweight "ensure profile exists" call
+        // coexist with the full Profile-page save
+        // without wiping existing values.
 
-                        .build();
+        if (dto.getName() != null && !dto.getName().isBlank()) {
+            profile.setName(dto.getName());
+        }
 
-        UserProfile savedUser =
-                userRepository.save(user);
+        if (dto.getEmail() != null && !dto.getEmail().isBlank()) {
+            profile.setEmail(dto.getEmail());
+        }
+
+        if (dto.getLocation() != null) {
+            profile.setLocation(dto.getLocation());
+        }
+
+        if (dto.getSummary() != null) {
+            profile.setSummary(dto.getSummary());
+        }
+
+        UserProfile saved = userRepository.save(profile);
 
         log.info(
                 "ACTION={} service={} user={} details={}",
-                "PROFILE_CREATED",
+                "PROFILE_SAVED",
                 "USER-SERVICE",
-                savedUser.getId(),
-                "New user profile created"
+                saved.getId(),
+                "Profile created or updated"
         );
 
-        return savedUser;
+        return saved;
 
     }
 

@@ -13,7 +13,7 @@ export default function CompanySidebar(){
 
             </h2>
 
-            <NavLink to="/company">
+            <NavLink to="/company/home">
 
                 Dashboard
 

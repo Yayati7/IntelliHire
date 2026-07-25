@@ -75,3 +75,17 @@ export async function getApplicantDetails(
     return response.data;
 
 }
+
+export async function approveApplication(id){
+    const response = await axios.put(
+        `${API}/application/${id}/approve`
+    );
+    return response.data;
+}
+
+export async function rejectApplication(id){
+    const response = await axios.put(
+        `${API}/application/${id}/reject`
+    );
+    return response.data;
+}

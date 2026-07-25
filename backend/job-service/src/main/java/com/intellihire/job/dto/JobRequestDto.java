@@ -21,7 +21,7 @@ public class JobRequestDto {
     private String location;
 
     @NotBlank(message="Description required")
-    @Size(min=20,max=5000)
+    @Size(min=10,max=5000)
     private String description;
 
     @NotBlank(message="Skills required")

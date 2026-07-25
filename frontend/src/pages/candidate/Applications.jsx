@@ -60,6 +60,13 @@ export default function Applications() {
 
             <div className="applications-page empty-applications">
 
+                <button
+                    style={{ marginBottom: 20, padding: "10px 20px", cursor: "pointer" }}
+                    onClick={() => navigate("/candidate/home")}
+                >
+                    ← Back to Home
+                </button>
+
                 <h1>
 
                     📄
@@ -91,6 +98,13 @@ export default function Applications() {
     return (
 
         <div className="applications-page">
+
+            <button
+                style={{ marginBottom: 20, padding: "10px 20px", cursor: "pointer" }}
+                onClick={() => navigate("/candidate/home")}
+            >
+                ← Back to Home
+            </button>
 
             <h2>
 

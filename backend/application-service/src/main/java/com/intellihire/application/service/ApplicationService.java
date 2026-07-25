@@ -56,80 +56,50 @@ public class ApplicationService {
         this.resumeClient = resumeClient;
     }
 
-    public Application apply(
+    public Application apply(ApplyRequestDto dto){
 
-            ApplyRequestDto dto
+        var existing = repository.findByUserIdAndJobId(dto.getUserId(), dto.getJobId());
 
-    ){
+        if (existing.isPresent()) {
+            Application existingApp = existing.get();
 
-        if(
+            if (!"REJECTED".equals(existingApp.getStatus())) {
+                throw new RuntimeException("You have already applied for this job.");
+            }
 
-                repository.existsByUserIdAndJobId(
+            // Rejected before — allow re-applying
+            existingApp.setStatus("APPLIED");
+            Application updated = repository.save(existingApp);
 
-                        dto.getUserId(),
-
-                        dto.getJobId()
-
-                )
-
-        ){
-
-            throw new RuntimeException(
-
-                    "You have already applied for this job."
-
+            log.info(
+                    "ACTION={} service={} user={} details={}",
+                    "JOB_REAPPLICATION",
+                    "APPLICATION-SERVICE",
+                    updated.getUserId(),
+                    "Re-applied for job id=" + updated.getJobId()
             );
 
+            return updated;
         }
 
         Application application =
-
                 Application.builder()
-
-                        .userId(
-
-                                dto.getUserId()
-
-                        )
-
-                        .jobId(
-
-                                dto.getJobId()
-
-                        )
-
-                        .status(
-
-                                "APPLIED"
-
-                        )
-
+                        .userId(dto.getUserId())
+                        .jobId(dto.getJobId())
+                        .status("APPLIED")
                         .build();
 
-        Application saved =
-
-                repository.save(
-
-                        application
-
-                );
+        Application saved = repository.save(application);
 
         log.info(
-
                 "ACTION={} service={} user={} details={}",
-
                 "JOB_APPLICATION_CREATED",
-
                 "APPLICATION-SERVICE",
-
                 saved.getUserId(),
-
                 "Applied for job id="+saved.getJobId()
-
         );
 
         return saved;
-
     }
 
     public List<Application> getAll(){
@@ -189,11 +159,8 @@ public class ApplicationService {
     }
 
     public List<ApplicationDetailsDto>
-
     getUserApplicationDetails(
-
             Long userId
-
     ){
 
         List<Application> applications =
@@ -224,13 +191,34 @@ public class ApplicationService {
 
                 .map(app -> {
 
-                    JobDto job =
+                    String title = "Unknown";
+                    String company = "Unknown";
+                    String location = "Unknown";
 
-                            jobClient.getJob(
+                    try {
 
-                                    app.getJobId()
+                        JobDto job =
 
-                            );
+                                jobClient.getJob(
+
+                                        app.getJobId()
+
+                                );
+
+                        title = job.getTitle();
+                        company = job.getCompany();
+                        location = job.getLocation();
+
+                    } catch (Exception e) {
+
+                        log.warn(
+                                "ACTION={} service={} details={}",
+                                "JOB_LOOKUP_FAILED",
+                                "APPLICATION-SERVICE",
+                                "Could not fetch job " + app.getJobId()
+                        );
+
+                    }
 
                     return ApplicationDetailsDto
 
@@ -250,19 +238,19 @@ public class ApplicationService {
 
                             .title(
 
-                                    job.getTitle()
+                                    title
 
                             )
 
                             .company(
 
-                                    job.getCompany()
+                                    company
 
                             )
 
                             .location(
 
-                                    job.getLocation()
+                                    location
 
                             )
 
@@ -313,82 +301,84 @@ public class ApplicationService {
     }
 
     public Application approve(
-
             Long applicationId
-
     ){
 
         Application application =
 
                 repository.findById(
-
                         applicationId
-
                 ).orElseThrow();
 
         application.setStatus(
-
                 "NEXT_ROUND"
-
         );
 
         Application updated =
 
                 repository.save(
-
                         application
-
                 );
 
-        UserDto user =
+        String candidateName = "Candidate";
+        String candidateEmail = null;
 
-                userClient.getUser(
+        try {
+            UserDto user = userClient.getUser(application.getUserId());
+            candidateName = user.getName();
+            candidateEmail = user.getEmail();
+        } catch (Exception e) {
+            log.warn("Could not fetch user {} for approval email", application.getUserId());
+        }
 
-                        application.getUserId()
+        String jobTitle = "the position";
+        String company = "our company";
 
-                );
+        try {
+            JobDto job = jobClient.getJob(application.getJobId());
+            jobTitle = job.getTitle();
+            company = job.getCompany();
+        } catch (Exception e) {
+            log.warn("Could not fetch job {} for approval email", application.getJobId());
+        }
 
-        JobDto job =
+        if (candidateEmail != null) {
 
-                jobClient.getJob(
+            emailService.send(
 
-                        application.getJobId()
+                    candidateEmail,
 
-                );
+                    "Congratulations!",
 
-        emailService.send(
+                    """
+                    Dear %s,
+            
+                    Congratulations!
+            
+                    You have been shortlisted for the next round for
+            
+                    %s
+            
+                    Further interview details will be shared shortly.
+            
+                    Regards,
+            
+                    %s
+                    """
 
-                user.getEmail(),
+                            .formatted(
 
-                "Congratulations!",
+                                    candidateName,
 
-                """
-                Dear %s,
-        
-                Congratulations!
-        
-                You have been shortlisted for the next round for
-        
-                %s
-        
-                Further interview details will be shared shortly.
-        
-                Regards,
-        
-                %s
-                """
+                                    jobTitle,
 
-                        .formatted(
+                                    company
 
-                                user.getName(),
+                            )
 
-                                job.getTitle(),
+            );
 
-                                job.getCompany()
-
-                        )
-
-        );
+        }
 
         log.info(
 
@@ -409,80 +399,80 @@ public class ApplicationService {
     }
 
     public Application reject(
-
             Long applicationId
-
     ){
 
         Application application =
 
                 repository.findById(
-
                         applicationId
-
                 ).orElseThrow();
 
         application.setStatus(
-
                 "REJECTED"
-
         );
 
         Application updated =
 
                 repository.save(
-
                         application
-
                 );
 
-        UserDto user =
+        String candidateName = "Candidate";
+        String candidateEmail = null;
 
-                userClient.getUser(
+        try {
+            UserDto user = userClient.getUser(application.getUserId());
+            candidateName = user.getName();
+            candidateEmail = user.getEmail();
+        } catch (Exception e) {
+            log.warn("Could not fetch user {} for rejection email", application.getUserId());
+        }
 
-                        application.getUserId()
+        String company = "our company";
 
-                );
+        try {
+            JobDto job = jobClient.getJob(application.getJobId());
+            company = job.getCompany();
+        } catch (Exception e) {
+            log.warn("Could not fetch job {} for rejection email", application.getJobId());
+        }
 
-        JobDto job =
+        if (candidateEmail != null) {
 
-                jobClient.getJob(
+            emailService.send(
 
-                        application.getJobId()
+                    candidateEmail,
 
-                );
+                    "Application Update",
 
-        emailService.send(
+                    """
+                    Dear %s,
+            
+                    Thank you for applying.
+            
+                    Unfortunately,
+            
+                    you were not selected this time.
+            
+                    We wish you all the best.
+            
+                    Regards,
+            
+                    %s
+                    """
 
-                user.getEmail(),
+                            .formatted(
 
-                "Application Update",
+                                    candidateName,
 
-                """
-                Dear %s,
-        
-                Thank you for applying.
-        
-                Unfortunately,
-        
-                you were not selected this time.
-        
-                We wish you all the best.
-        
-                Regards,
-        
-                %s
-                """
+                                    company
 
-                        .formatted(
+                            )
 
-                                user.getName(),
+            );
 
-                                job.getCompany()
-
-                        )
-
-        );
+        }
 
         log.info(
 
@@ -503,11 +493,8 @@ public class ApplicationService {
     }
 
     public List<ApplicantDto>
-
     getApplicants(
-
             Long jobId
-
     ){
 
         List<Application> applications=
@@ -520,21 +507,44 @@ public class ApplicationService {
 
                 .map(app->{
 
-                    UserDto user=
+                    String candidateName = "Unknown";
+                    String email = "Unknown";
+                    String resumeFileName = null;
 
-                            userClient.getUser(
+                    try {
 
-                                    app.getUserId()
+                        UserDto user = userClient.getUser(app.getUserId());
 
-                            );
+                        candidateName = user.getName();
+                        email = user.getEmail();
 
-                    ResumeDto resume=
+                    } catch (Exception e) {
 
-                            resumeClient.getResume(
+                        log.warn(
+                                "ACTION={} service={} details={}",
+                                "USER_LOOKUP_FAILED",
+                                "APPLICATION-SERVICE",
+                                "Could not fetch user " + app.getUserId()
+                        );
 
-                                    app.getUserId()
+                    }
 
-                            );
+                    try {
+
+                        ResumeDto resume = resumeClient.getResume(app.getUserId());
+
+                        resumeFileName = resume.getFileName();
+
+                    } catch (Exception e) {
+
+                        log.warn(
+                                "ACTION={} service={} details={}",
+                                "RESUME_LOOKUP_FAILED",
+                                "APPLICATION-SERVICE",
+                                "No resume for user " + app.getUserId()
+                        );
+
+                    }
 
                     return ApplicantDto
 
@@ -554,19 +564,19 @@ public class ApplicationService {
 
                             .candidateName(
 
-                                    user.getName()
+                                    candidateName
 
                             )
 
                             .email(
 
-                                    user.getEmail()
+                                    email
 
                             )
 
                             .resumeFileName(
 
-                                    resume.getFileName()
+                                    resumeFileName
 
                             )
 

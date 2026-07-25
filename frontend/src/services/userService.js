@@ -15,3 +15,19 @@ export async function getUser(userId){
     return response.data;
 
 }
+
+export async function saveUserProfile(userId, data){
+
+    const response =
+
+    await axios.put(
+
+        `${API}/user/${userId}`,
+
+        data
+
+    );
+
+    return response.data;
+
+}

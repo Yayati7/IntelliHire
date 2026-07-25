@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { getDashboard } from "../../services/analyticsService";
+import DeveloperLayout from "../../layouts/DeveloperLayout";
 import "./DeveloperDashboard.css";
 
 export default function DeveloperDashboard() {
 
     const [dashboard, setDashboard] = useState(null);
-
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
 
@@ -21,12 +22,14 @@ export default function DeveloperDashboard() {
             const data = await getDashboard();
 
             setDashboard(data);
+            setError(false);
 
         }
 
         catch (e) {
 
             console.log(e);
+            setError(true);
 
         }
 
@@ -41,152 +44,147 @@ export default function DeveloperDashboard() {
     if (loading) {
 
         return (
+            <DeveloperLayout>
+                <div className="developer-loading">
+                    Loading Dashboard...
+                </div>
+            </DeveloperLayout>
+        );
 
-            <div className="developer-loading">
+    }
 
-                Loading Dashboard...
+    if (error || !dashboard) {
 
-            </div>
-
+        return (
+            <DeveloperLayout>
+                <div className="developer-dashboard">
+                    <h1>IntelliHire Developer Dashboard</h1>
+                    <p className="subtitle">
+                        Could not load analytics. Make sure analytics-service is
+                        running and reachable.
+                    </p>
+                    <button onClick={loadDashboard}>Retry</button>
+                </div>
+            </DeveloperLayout>
         );
 
     }
 
     return (
 
-        <div className="developer-dashboard">
+        <DeveloperLayout>
 
-            <h1>
+            <div className="developer-dashboard">
 
-                IntelliHire Developer Dashboard
+                <h1>
+                    IntelliHire Developer Dashboard
+                </h1>
 
-            </h1>
+                <p className="subtitle">
+                    Real-time Platform Analytics
+                </p>
 
-            <p className="subtitle">
+                <div className="dashboard-grid">
 
-                Real-time Platform Analytics
+                    <DashboardCard
+                        title="Total Users"
+                        value={dashboard.totalUsers ?? 0}
+                        color="blue"
+                    />
 
-            </p>
+                    <DashboardCard
+                        title="Jobs Posted"
+                        value={dashboard.totalJobs ?? 0}
+                        color="green"
+                    />
 
-            <div className="dashboard-grid">
+                    <DashboardCard
+                        title="Applications"
+                        value={dashboard.totalApplications ?? 0}
+                        color="orange"
+                    />
 
-                <DashboardCard
-                    title="Total Users"
-                    value={dashboard.totalUsers}
-                    color="blue"
-                />
+                    <DashboardCard
+                        title="Total Events"
+                        value={dashboard.totalEvents ?? 0}
+                        color="purple"
+                    />
 
-                <DashboardCard
-                    title="Jobs Posted"
-                    value={dashboard.totalJobs}
-                    color="green"
-                />
+                    <DashboardCard
+                        title="Recommendations"
+                        value={dashboard.recommendationEvents ?? 0}
+                        color="pink"
+                    />
 
-                <DashboardCard
-                    title="Applications"
-                    value={dashboard.totalApplications}
-                    color="orange"
-                />
+                    <DashboardCard
+                        title="Resume Uploads"
+                        value={dashboard.resumeUploads ?? 0}
+                        color="cyan"
+                    />
 
-                <DashboardCard
-                    title="Total Events"
-                    value={dashboard.totalEvents}
-                    color="purple"
-                />
+                    <DashboardCard
+                        title="Applications Logged"
+                        value={dashboard.jobApplications ?? 0}
+                        color="gold"
+                    />
 
-                <DashboardCard
-                    title="Recommendations"
-                    value={dashboard.recommendationEvents}
-                    color="pink"
-                />
+                    <DashboardCard
+                        title="Job Created Events"
+                        value={dashboard.jobPosts ?? 0}
+                        color="red"
+                    />
 
-                <DashboardCard
-                    title="Resume Uploads"
-                    value={dashboard.resumeUploads}
-                    color="cyan"
-                />
+                </div>
 
-                <DashboardCard
-                    title="Applications Logged"
-                    value={dashboard.jobApplications}
-                    color="gold"
-                />
+                <div className="analytics-section">
 
-                <DashboardCard
-                    title="Job Created Events"
-                    value={dashboard.jobPosts}
-                    color="red"
-                />
+                    <h2>
+                        Platform Summary
+                    </h2>
 
-            </div>
+                    <table>
 
-            <div className="analytics-section">
+                        <tbody>
 
-                <h2>
+                        <tr>
+                            <td>Total Registered Users</td>
+                            <td>{dashboard.totalUsers ?? 0}</td>
+                        </tr>
 
-                    Platform Summary
+                        <tr>
+                            <td>Total Jobs</td>
+                            <td>{dashboard.totalJobs ?? 0}</td>
+                        </tr>
 
-                </h2>
+                        <tr>
+                            <td>Total Applications</td>
+                            <td>{dashboard.totalApplications ?? 0}</td>
+                        </tr>
 
-                <table>
+                        <tr>
+                            <td>Total Analytics Events</td>
+                            <td>{dashboard.totalEvents ?? 0}</td>
+                        </tr>
 
-                    <tbody>
+                        <tr>
+                            <td>Resume Upload Events</td>
+                            <td>{dashboard.resumeUploads ?? 0}</td>
+                        </tr>
 
-                    <tr>
+                        <tr>
+                            <td>Recommendation Events</td>
+                            <td>{dashboard.recommendationEvents ?? 0}</td>
+                        </tr>
 
-                        <td>Total Registered Users</td>
+                        </tbody>
 
-                        <td>{dashboard.totalUsers}</td>
+                    </table>
 
-                    </tr>
-
-                    <tr>
-
-                        <td>Total Jobs</td>
-
-                        <td>{dashboard.totalJobs}</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td>Total Applications</td>
-
-                        <td>{dashboard.totalApplications}</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td>Total Analytics Events</td>
-
-                        <td>{dashboard.totalEvents}</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td>Resume Upload Events</td>
-
-                        <td>{dashboard.resumeUploads}</td>
-
-                    </tr>
-
-                    <tr>
-
-                        <td>Recommendation Events</td>
-
-                        <td>{dashboard.recommendationEvents}</td>
-
-                    </tr>
-
-                    </tbody>
-
-                </table>
+                </div>
 
             </div>
 
-        </div>
+        </DeveloperLayout>
 
     );
 
@@ -207,15 +205,11 @@ function DashboardCard({
         <div className={`dashboard-card ${color}`}>
 
             <h2>
-
                 {value}
-
             </h2>
 
             <p>
-
                 {title}
-
             </p>
 
         </div>
