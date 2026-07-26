@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
 import CompanyLayout from "../../layouts/CompanyLayout";
 import "./PostJob.css";
@@ -55,7 +56,7 @@ export default function PostJob() {
 
             );
 
-            alert("Job Posted Successfully");
+            toast.success("Job Posted Successfully");
 
             navigate("/company/home");
 
@@ -67,7 +68,7 @@ export default function PostJob() {
 
             const message = e?.response?.data?.message || "Unable to post job";
 
-            alert(message);
+            toast.error(message);
 
         }
 
@@ -81,61 +82,59 @@ export default function PostJob() {
 
                 <h2>Post New Job</h2>
 
-                <input
-                    name="title"
-                    placeholder="Job Title"
-                    value={job.title}
-                    onChange={handleChange}
-                />
+                <div className="form-field">
+                    <label>Job Title</label>
+                    <input
+                        name="title"
+                        placeholder="e.g. Senior Backend Engineer"
+                        value={job.title}
+                        onChange={handleChange}
+                    />
+                </div>
 
-                <input
-                    name="company"
-                    placeholder="Company"
-                    value={job.company}
-                    onChange={handleChange}
-                />
+                <div className="form-field">
+                    <label>Company</label>
+                    <input
+                        name="company"
+                        placeholder="Company name"
+                        value={job.company}
+                        onChange={handleChange}
+                    />
+                </div>
 
-                <input
-                    name="location"
-                    placeholder="Location"
-                    value={job.location}
-                    onChange={handleChange}
-                />
+                <div className="form-field">
+                    <label>Location</label>
+                    <input
+                        name="location"
+                        placeholder="e.g. Bangalore, Remote"
+                        value={job.location}
+                        onChange={handleChange}
+                    />
+                </div>
 
-                <textarea
+                <div className="form-field">
+                    <label>Job Description</label>
+                    <textarea
+                        rows="8"
+                        name="description"
+                        placeholder="Describe the role, responsibilities and requirements"
+                        value={job.description}
+                        onChange={handleChange}
+                    />
+                </div>
 
-                    rows="8"
+                <div className="form-field">
+                    <label>Skills</label>
+                    <input
+                        name="skills"
+                        placeholder="Comma separated, e.g. Java, Spring Boot, AWS"
+                        value={job.skills}
+                        onChange={handleChange}
+                    />
+                </div>
 
-                    name="description"
-
-                    placeholder="Job Description"
-
-                    value={job.description}
-
-                    onChange={handleChange}
-
-                />
-
-                <input
-
-                    name="skills"
-
-                    placeholder="Skills (comma separated)"
-
-                    value={job.skills}
-
-                    onChange={handleChange}
-
-                />
-
-                <button
-
-                    onClick={createJob}
-
-                >
-
+                <button className="btn btn-primary" onClick={createJob}>
                     Post Job
-
                 </button>
 
             </div>

@@ -1,37 +1,94 @@
-.applicants-page{
-
-padding:30px;
-
+.applicants-page {
+  display: flex;
+  flex-direction: column;
 }
 
-.applicant-card{
-
-background:white;
-
-padding:20px;
-
-margin-bottom:20px;
-
-border-radius:10px;
-
-box-shadow:0 2px 8px rgba(0,0,0,.08);
-
+.applicants-page h2 {
+  font-size: 26px;
+  margin-bottom: 26px;
 }
 
-.applicant-actions{
-
-margin-top:15px;
-
-display:flex;
-
-gap:15px;
-
+.applicants-empty {
+  color: var(--text-muted);
+  font-size: 15px;
+  padding: 40px 0;
+  text-align: center;
 }
 
-.applicant-actions button{
+.applicant-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  padding: 26px 28px;
+  margin-bottom: 18px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition);
+}
 
-padding:10px 18px;
+.applicant-card:hover {
+  box-shadow: var(--shadow-card);
+}
 
-cursor:pointer;
+.applicant-card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
 
+.applicant-card p {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.applicant-card p b {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.applicant-card a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 14px;
+  margin: 4px 0 10px;
+}
+
+.applicant-card a:hover {
+  text-decoration: underline;
+}
+
+.applicant-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+}
+
+.applicant-actions button {
+  padding: 10px 22px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 13.5px;
+  border: none;
+  color: #fff;
+  transition: var(--transition);
+}
+
+.applicant-actions button:first-child {
+  background: var(--success);
+}
+
+.applicant-actions button:last-child {
+  background: var(--danger);
+}
+
+.applicant-actions button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.applicant-actions button:disabled {
+  background: var(--bg-surface-2);
+  color: var(--text-muted);
+  cursor: not-allowed;
 }

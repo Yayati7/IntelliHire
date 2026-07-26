@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { FaFileAlt } from "react-icons/fa";
 import CompanyLayout from "../../layouts/CompanyLayout";
+import PageLoader from "../../components/common/PageLoader";
 import { useAuth } from "../../context/AuthContext";
+import { useConfirm } from "../../context/ConfirmContext";
 import { getRecruiterJobs } from "../../services/jobService";
 import {
     getApplicantDetails,
@@ -12,6 +15,7 @@ import "./Applicants.css";
 export default function CompanyApplicants() {
 
     const { user } = useAuth();
+    const confirm = useConfirm();
     const [rows, setRows] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -47,7 +51,11 @@ export default function CompanyApplicants() {
     }
 
     async function approve(id) {
-        if (!window.confirm("Approve this candidate?")) return;
+        const ok = await confirm("Approve this candidate for the next round?", {
+            title: "Approve Candidate",
+            confirmText: "Approve"
+        });
+        if (!ok) return;
 
         await approveApplication(id);
 
@@ -61,7 +69,12 @@ export default function CompanyApplicants() {
     }
 
     async function reject(id) {
-        if (!window.confirm("Reject this candidate?")) return;
+        const ok = await confirm("Reject this candidate's application?", {
+            title: "Reject Candidate",
+            confirmText: "Reject",
+            danger: true
+        });
+        if (!ok) return;
 
         await rejectApplication(id);
 
@@ -77,7 +90,7 @@ export default function CompanyApplicants() {
     if (loading) {
         return (
             <CompanyLayout>
-                <p>Loading...</p>
+                <PageLoader />
             </CompanyLayout>
         );
     }
@@ -89,7 +102,7 @@ export default function CompanyApplicants() {
                 <h2>All Applicants</h2>
 
                 {rows.length === 0 && (
-                    <p>No applicants yet.</p>
+                    <p className="applicants-empty">No applicants yet.</p>
                 )}
 
                 {rows.map(app => (
@@ -112,7 +125,7 @@ export default function CompanyApplicants() {
                                     target="_blank"
                                     rel="noreferrer"
                                 >
-                                    📄 View Resume
+                                    <FaFileAlt /> View Resume
                                 </a>
                             )
                         }

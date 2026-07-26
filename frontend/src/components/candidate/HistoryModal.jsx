@@ -1,79 +1,25 @@
 import "./HistoryModal.css";
 
-export default function HistoryModal({
+export default function HistoryModal({ open, data, onClose }) {
 
-    open,
+    if (!open) return null;
 
-    data,
-
-    onClose
-
-}){
-
-    if(!open) return null;
-
-    return(
-
+    return (
         <div className="modal-overlay">
-
             <div className="modal">
+                <h2>Top 5 Recommendations</h2>
 
-                <h2>
+                {data?.recommendations?.map((job, index) => (
+                    <div key={index} className="history-job">
+                        <b>#{index + 1}</b>
+                        {job.title} — {job.finalScore}%
+                    </div>
+                ))}
 
-                    Top 5 Recommendations
-
-                </h2>
-
-                {
-
-                    data?.recommendations?.map(
-
-                        (job,index)=>(
-
-                            <div
-
-                                key={index}
-
-                                className="history-job"
-
-                            >
-
-                                <b>
-
-                                    #{index+1}
-
-                                </b>
-
-                                {" "}
-
-                                {job.title}
-
-                                {" - "}
-
-                                {job.finalScore}%
-
-                            </div>
-
-                        )
-
-                    )
-
-                }
-
-                <button
-
-                    onClick={onClose}
-
-                >
-
-                    Close
-
-                </button>
-
+                <div className="modal-actions">
+                    <button className="btn btn-outline" onClick={onClose}>Close</button>
+                </div>
             </div>
-
         </div>
-
     );
-
 }

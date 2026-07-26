@@ -1,116 +1,113 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { FaBars, FaTimes, FaUserGraduate, FaBuilding } from "react-icons/fa";
 import "./../../styles/Navbar.css";
 
+const LINKS = [
+  { href: "#features", label: "Features" },
+  { href: "#workflow", label: "How It Works" },
+  { href: "#roles", label: "Roles" },
+  { href: "#tech", label: "Tech Stack" },
+];
+
 export default function Navbar() {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-    const navigate = useNavigate();
-    const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 16);
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    return (
+  return (
+    <nav className={`navbar ${scrolled ? "navbar-scrolled" : ""}`}>
+      <div className="navbar-inner">
+        <div className="logo" onClick={() => navigate("/")}>
+          <span className="logo-mark">IH</span>
+          IntelliHire
+        </div>
 
-        <nav className="navbar">
+        <ul className="nav-links">
+          {LINKS.map((link) => (
+            <li key={link.href}>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
 
-            <div
-                className="logo"
-                onClick={() => navigate("/")}
-            >
-                IntelliHire
-            </div>
+        <div className="nav-buttons">
+          <button className="login-btn" onClick={() => setOpen((prev) => !prev)}>
+            Login
+          </button>
 
-            <ul className="nav-links">
-
-                <li>
-                    <a href="#features">
-                        Features
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#workflow">
-                        How It Works
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#roles">
-                        Roles
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#tech">
-                        Tech Stack
-                    </a>
-                </li>
-
-            </ul>
-
-            <div
-                className="nav-buttons"
-                style={{ position: "relative" }}
-            >
-
-                <button
-                    className="login-btn"
-                    onClick={() => setOpen(prev => !prev)}
+          <AnimatePresence>
+            {open && (
+              <motion.div
+                className="login-dropdown glass"
+                initial={{ opacity: 0, y: -10, scale: 0.96 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -10, scale: 0.96 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+              >
+                <div
+                  className="login-dropdown-item"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate("/login?role=USER");
+                  }}
                 >
-                    Login
-                </button>
+                  <FaUserGraduate />
+                  <span>Login as Candidate</span>
+                </div>
 
-                {open && (
+                <div
+                  className="login-dropdown-item"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate("/login?role=RECRUITER");
+                  }}
+                >
+                  <FaBuilding />
+                  <span>Login as Company</span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-                    <div
-                        style={{
-                            position: "absolute",
-                            top: "48px",
-                            right: 0,
-                            background: "white",
-                            borderRadius: 10,
-                            boxShadow: "0 8px 25px rgba(0,0,0,.15)",
-                            overflow: "hidden",
-                            minWidth: 180,
-                            zIndex: 1000
-                        }}
-                    >
+          <button
+            className="mobile-toggle"
+            onClick={() => setMobileOpen((prev) => !prev)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+      </div>
 
-                        <div
-                            style={{
-                                padding: "14px 18px",
-                                cursor: "pointer",
-                                color: "#111827",
-                                borderBottom: "1px solid #eee"
-                            }}
-                            onClick={() => {
-                                setOpen(false);
-                                navigate("/login?role=USER");
-                            }}
-                        >
-                            Login as Candidate
-                        </div>
-
-                        <div
-                            style={{
-                                padding: "14px 18px",
-                                cursor: "pointer",
-                                color: "#111827"
-                            }}
-                            onClick={() => {
-                                setOpen(false);
-                                navigate("/login?role=RECRUITER");
-                            }}
-                        >
-                            Login as Company
-                        </div>
-
-                    </div>
-
-                )}
-
-            </div>
-
-        </nav>
-
-    );
-
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.ul
+            className="nav-links-mobile"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            {LINKS.map((link) => (
+              <li key={link.href}>
+                <a href={link.href} onClick={() => setMobileOpen(false)}>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+    </nav>
+  );
 }

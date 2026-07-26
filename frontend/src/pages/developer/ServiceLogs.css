@@ -1,0 +1,13 @@
+.service-logs-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.service-logs-page h1 {
+  font-size: 26px;
+}
+
+.service-logs-back {
+  align-self: flex-start;
+}

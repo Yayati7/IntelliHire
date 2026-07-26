@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaArrowLeft, FaFileAlt } from "react-icons/fa";
 import "./Applications.css";
+
+import CandidateLayout from "../../layouts/CandidateLayout";
+import PageLoader from "../../components/common/PageLoader";
 
 import { useAuth } from "../../context/AuthContext";
 
@@ -15,6 +19,7 @@ export default function Applications() {
     const navigate = useNavigate();
 
     const [applications, setApplications] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
 
@@ -52,25 +57,39 @@ export default function Applications() {
 
         }
 
+        finally {
+
+            setLoading(false);
+
+        }
+
+    }
+
+    if (loading) {
+        return (
+            <CandidateLayout>
+                <PageLoader />
+            </CandidateLayout>
+        );
     }
 
     if(applications.length===0){
 
         return(
 
+            <CandidateLayout>
+
             <div className="applications-page empty-applications">
 
                 <button
-                    style={{ marginBottom: 20, padding: "10px 20px", cursor: "pointer" }}
+                    className="btn btn-outline"
                     onClick={() => navigate("/candidate/home")}
                 >
-                    ← Back to Home
+                    <FaArrowLeft /> Back to Home
                 </button>
 
                 <h1>
-
-                    📄
-
+                    <FaFileAlt />
                 </h1>
 
                 <h3>
@@ -80,6 +99,8 @@ export default function Applications() {
                 </h3>
 
                 <button
+
+                    className="btn btn-primary"
 
                     onClick={()=>navigate("/candidate/home")}
 
@@ -91,19 +112,23 @@ export default function Applications() {
 
             </div>
 
+            </CandidateLayout>
+
         );
 
     }
 
     return (
 
+        <CandidateLayout>
+
         <div className="applications-page">
 
             <button
-                style={{ marginBottom: 20, padding: "10px 20px", cursor: "pointer" }}
+                className="btn btn-outline"
                 onClick={() => navigate("/candidate/home")}
             >
-                ← Back to Home
+                <FaArrowLeft /> Back to Home
             </button>
 
             <h2>
@@ -111,6 +136,8 @@ export default function Applications() {
                 My Applications
 
             </h2>
+
+            <div className="applications-table-wrap">
 
             <table>
 
@@ -192,7 +219,11 @@ export default function Applications() {
 
             </table>
 
+            </div>
+
         </div>
+
+        </CandidateLayout>
 
     );
 

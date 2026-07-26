@@ -1,115 +1,94 @@
-.applications-page{
-
-padding:30px;
-
+.applications-page {
+  display: flex;
+  flex-direction: column;
 }
 
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-background:white;
-
+.applications-page > .btn-outline {
+  margin-bottom: 24px;
+  align-self: flex-start;
 }
 
-th,td{
-
-padding:14px;
-
-border-bottom:1px solid #ddd;
-
-text-align:left;
-
+.applications-page h2 {
+  font-size: 26px;
+  margin-bottom: 24px;
 }
 
-.pending{
-
-color:orange;
-
-font-weight:bold;
-
+.applications-table-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
 }
 
-.approved{
-
-color:green;
-
-font-weight:bold;
-
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.rejected{
-
-color:red;
-
-font-weight:bold;
-
+th, td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-glass);
+  text-align: left;
+  font-size: 14.5px;
 }
 
-.applied{
-
-color:#1976d2;
-
-font-weight:bold;
-
+th {
+  background: var(--bg-surface-2);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-.status-badge{
-
-padding:6px 14px;
-
-border-radius:20px;
-
-color:white;
-
-font-weight:600;
-
-display:inline-block;
-
+td {
+  color: var(--text-secondary);
 }
 
-.status-badge.applied{
-
-background:orange;
-
+tbody tr:last-child td {
+  border-bottom: none;
 }
 
-.status-badge.rejected{
-
-background:#dc3545;
-
+tbody tr:hover {
+  background: var(--bg-surface-2);
 }
 
-.status-badge.next_round{
-
-background:#28a745;
-
+.status-badge {
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  color: #fff;
+  font-weight: 600;
+  font-size: 12.5px;
+  display: inline-block;
 }
 
-.empty-applications{
-
-text-align:center;
-
-padding:80px;
-
+.status-badge.applied {
+  background: var(--warning);
 }
 
-.empty-applications h1{
-
-font-size:70px;
-
-margin-bottom:15px;
-
+.status-badge.rejected {
+  background: var(--danger);
 }
 
-.empty-applications button{
+.status-badge.next_round {
+  background: var(--success);
+}
 
-margin-top:20px;
+.empty-applications {
+  text-align: center;
+  padding: 60px 30px;
+  align-items: center;
+}
 
-padding:12px 24px;
+.empty-applications h1 {
+  font-size: 60px;
+  margin-bottom: 18px;
+  color: var(--text-muted);
+}
 
-cursor:pointer;
-
+.empty-applications h3 {
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 24px;
 }

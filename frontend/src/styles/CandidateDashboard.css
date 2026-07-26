@@ -1,19 +1,24 @@
-.dashboard-stats{
-
-display:flex;
-
-gap:20px;
-
-margin-bottom:30px;
-
+.dashboard-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
 }
 
-.jobs-heading{
+.jobs-heading {
+  margin-top: 48px;
+  margin-bottom: 22px;
+  font-size: 26px;
+}
 
-margin-top:35px;
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
 
-margin-bottom:20px;
-
-font-size:28px;
-
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }

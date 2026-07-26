@@ -1,6 +1,18 @@
 import { useEffect, useState } from "react";
 import { getDashboard } from "../../services/analyticsService";
 import DeveloperLayout from "../../layouts/DeveloperLayout";
+import PageLoader from "../../components/common/PageLoader";
+import {
+    FaUsers,
+    FaBriefcase,
+    FaClipboardList,
+    FaChartLine,
+    FaBrain,
+    FaFileUpload,
+    FaCheckCircle,
+    FaPlusSquare,
+    FaExclamationTriangle
+} from "react-icons/fa";
 import "./DeveloperDashboard.css";
 
 export default function DeveloperDashboard() {
@@ -45,9 +57,7 @@ export default function DeveloperDashboard() {
 
         return (
             <DeveloperLayout>
-                <div className="developer-loading">
-                    Loading Dashboard...
-                </div>
+                <PageLoader />
             </DeveloperLayout>
         );
 
@@ -59,11 +69,14 @@ export default function DeveloperDashboard() {
             <DeveloperLayout>
                 <div className="developer-dashboard">
                     <h1>IntelliHire Developer Dashboard</h1>
-                    <p className="subtitle">
-                        Could not load analytics. Make sure analytics-service is
-                        running and reachable.
-                    </p>
-                    <button onClick={loadDashboard}>Retry</button>
+                    <div className="developer-error">
+                        <FaExclamationTriangle />
+                        <p>
+                            Could not load analytics. Make sure analytics-service is
+                            running and reachable.
+                        </p>
+                        <button className="btn btn-primary" onClick={loadDashboard}>Retry</button>
+                    </div>
                 </div>
             </DeveloperLayout>
         );
@@ -76,59 +89,69 @@ export default function DeveloperDashboard() {
 
             <div className="developer-dashboard">
 
-                <h1>
-                    IntelliHire Developer Dashboard
-                </h1>
+                <div>
+                    <h1>
+                        IntelliHire Developer Dashboard
+                    </h1>
 
-                <p className="subtitle">
-                    Real-time Platform Analytics
-                </p>
+                    <p className="subtitle">
+                        Real-time Platform Analytics
+                    </p>
+                </div>
 
                 <div className="dashboard-grid">
 
                     <DashboardCard
+                        icon={<FaUsers />}
                         title="Total Users"
                         value={dashboard.totalUsers ?? 0}
                         color="blue"
                     />
 
                     <DashboardCard
+                        icon={<FaBriefcase />}
                         title="Jobs Posted"
                         value={dashboard.totalJobs ?? 0}
                         color="green"
                     />
 
                     <DashboardCard
+                        icon={<FaClipboardList />}
                         title="Applications"
                         value={dashboard.totalApplications ?? 0}
                         color="orange"
                     />
 
                     <DashboardCard
+                        icon={<FaChartLine />}
                         title="Total Events"
                         value={dashboard.totalEvents ?? 0}
                         color="purple"
                     />
 
                     <DashboardCard
+                        icon={<FaBrain />}
                         title="Recommendations"
                         value={dashboard.recommendationEvents ?? 0}
                         color="pink"
                     />
 
                     <DashboardCard
+                        icon={<FaFileUpload />}
                         title="Resume Uploads"
                         value={dashboard.resumeUploads ?? 0}
                         color="cyan"
                     />
 
                     <DashboardCard
+                        icon={<FaCheckCircle />}
                         title="Applications Logged"
                         value={dashboard.jobApplications ?? 0}
                         color="gold"
                     />
 
                     <DashboardCard
+                        icon={<FaPlusSquare />}
                         title="Job Created Events"
                         value={dashboard.jobPosts ?? 0}
                         color="red"
@@ -192,6 +215,8 @@ export default function DeveloperDashboard() {
 
 function DashboardCard({
 
+    icon,
+
     title,
 
     value,
@@ -204,13 +229,19 @@ function DashboardCard({
 
         <div className={`dashboard-card ${color}`}>
 
-            <h2>
-                {value}
-            </h2>
+            <div className="dashboard-card-icon">
+                {icon}
+            </div>
 
-            <p>
-                {title}
-            </p>
+            <div>
+                <h2>
+                    {value}
+                </h2>
+
+                <p>
+                    {title}
+                </p>
+            </div>
 
         </div>
 

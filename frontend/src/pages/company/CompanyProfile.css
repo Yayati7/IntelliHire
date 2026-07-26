@@ -1,0 +1,28 @@
+.company-profile-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  padding: 36px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  max-width: 480px;
+}
+
+.company-profile-card h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.company-profile-card p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.company-profile-card p b {
+  color: var(--text-primary);
+  margin-right: 6px;
+}
+
+.company-profile-card button {
+  margin-top: 20px;
+}

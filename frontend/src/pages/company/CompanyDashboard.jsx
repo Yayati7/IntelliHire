@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaPlus, FaUsers, FaEdit, FaTrash } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
+import { useConfirm } from "../../context/ConfirmContext";
 import CompanyLayout from "../../layouts/CompanyLayout";
 
 import {
@@ -18,6 +20,7 @@ import "./CompanyDashboard.css";
 export default function CompanyDashboard() {
 
     const { user } = useAuth();
+    const confirm = useConfirm();
 
     const [jobs, setJobs] = useState([]);
 
@@ -55,9 +58,13 @@ export default function CompanyDashboard() {
 
     async function removeJob(id) {
 
-        if (!window.confirm("Delete Job ?"))
+        const ok = await confirm("Delete this job? This action cannot be undone.", {
+            title: "Delete Job",
+            confirmText: "Delete",
+            danger: true
+        });
 
-            return;
+        if (!ok) return;
 
         try {
 
@@ -85,21 +92,15 @@ export default function CompanyDashboard() {
 
                     <h2>My Posted Jobs</h2>
 
-                    <Link
-
-                        to="/company/post-job"
-
-                    >
-
-                        <button>
-
-                            + Post Job
-
+                    <Link to="/company/post-job">
+                        <button className="btn btn-primary">
+                            <FaPlus /> Post Job
                         </button>
-
                     </Link>
 
                 </div>
+
+                <div className="company-jobs-grid">
 
                 {
 
@@ -121,17 +122,13 @@ export default function CompanyDashboard() {
 
                             <p>
 
-                                <b>Company :</b>
-
-                                {job.company}
+                                <b>Company:</b> {job.company}
 
                             </p>
 
                             <p>
 
-                                <b>Location :</b>
-
-                                {job.location}
+                                <b>Location:</b> {job.location}
 
                             </p>
 
@@ -143,42 +140,16 @@ export default function CompanyDashboard() {
 
                             <div className="company-actions">
 
-                                <Link
-
-                                    to={`/company/applicants/job/${job.id}`}
-
-                                >
-
-                                    <button>
-
-                                        Applicants
-
-                                    </button>
-
+                                <Link to={`/company/applicants/job/${job.id}`}>
+                                    <button><FaUsers /> Applicants</button>
                                 </Link>
 
-                                <Link
-
-                                    to={`/company/edit/${job.id}`}
-
-                                >
-
-                                    <button>
-
-                                        Edit
-
-                                    </button>
-
+                                <Link to={`/company/edit/${job.id}`}>
+                                    <button><FaEdit /> Edit</button>
                                 </Link>
 
-                                <button
-
-                                    onClick={() => removeJob(job.id)}
-
-                                >
-
-                                    Delete
-
+                                <button onClick={() => removeJob(job.id)}>
+                                    <FaTrash /> Delete
                                 </button>
 
                             </div>
@@ -188,6 +159,8 @@ export default function CompanyDashboard() {
                     ))
 
                 }
+
+                </div>
 
             </div>
 

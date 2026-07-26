@@ -1,31 +1,19 @@
-.company-layout{
-
-display:flex;
-
-min-height:100vh;
-
-background:#f5f7fb;
-
+.company-layout {
+  display: flex;
+  margin-top: 74px;
+  min-height: calc(100svh - 74px);
+  background: var(--bg-void);
 }
 
-.company-content{
-
-flex:1;
-
-padding:35px;
-
-overflow:auto;
-
+.company-content {
+  flex: 1;
+  padding: 48px;
+  overflow: auto;
+  min-height: calc(100svh - 74px);
 }
 
-.company-layout{
-
-display:flex;
-
-min-height:100vh;
-
-background:#f5f7fb;
-
-margin-top:75px;
-
+@media (max-width: 900px) {
+  .company-content {
+    padding: 28px 20px;
+  }
 }

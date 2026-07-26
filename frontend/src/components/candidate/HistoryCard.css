@@ -1,35 +1,50 @@
-.history-card{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    background:white;
-
-    padding:20px;
-
-    margin-bottom:15px;
-
-    border-radius:12px;
-
-    box-shadow:0 3px 10px rgba(0,0,0,.08);
-
+.history-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass);
+  padding: 20px 26px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition);
 }
 
-.history-card button{
+.history-card:hover {
+  border-color: var(--border-glass-strong);
+}
 
-    background:#2563eb;
+.history-card-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-muted);
+}
 
-    color:white;
+.history-card-info svg {
+  color: var(--primary);
+  font-size: 16px;
+}
 
-    border:none;
+.history-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
 
-    padding:10px 18px;
+.history-card button {
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  background: var(--bg-surface-2);
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 13.5px;
+  border: 1px solid var(--border-glass);
+  transition: var(--transition);
+}
 
-    border-radius:8px;
-
-    cursor:pointer;
-
+.history-card button:hover {
+  background: var(--gradient-primary);
+  color: #fff;
+  border-color: transparent;
 }

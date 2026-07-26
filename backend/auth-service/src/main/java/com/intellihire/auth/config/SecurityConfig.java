@@ -53,7 +53,9 @@ public class SecurityConfig {
 
                                         "/actuator/**",
 
-                                        "/auth/**"
+                                        "/auth/**",
+
+                                        "/logs"
 
                                 )
 

@@ -1,19 +1,17 @@
-.developer-layout{
-
-display:flex;
-
-min-height:100vh;
-
-background:#f5f7fb;
-
-margin-top:75px;
-
+.developer-layout {
+  display: flex;
+  margin-top: 74px;
+  min-height: calc(100svh - 74px);
+  background: var(--bg-void);
 }
 
-.developer-content{
+.developer-content {
+  flex: 1;
+  padding: 48px;
+}
 
-flex:1;
-
-padding:35px;
-
+@media (max-width: 900px) {
+  .developer-content {
+    padding: 28px 20px;
+  }
 }

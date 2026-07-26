@@ -4,7 +4,13 @@ import { useParams } from "react-router-dom";
 
 import axios from "axios";
 
+import { toast } from "react-toastify";
+
+import { FaFileAlt } from "react-icons/fa";
+
 import CompanyLayout from "../../layouts/CompanyLayout";
+
+import { useConfirm } from "../../context/ConfirmContext";
 
 import {
 
@@ -17,6 +23,8 @@ import "./Applicants.css";
 export default function Applicants(){
 
 const { jobId } = useParams();
+
+const confirm = useConfirm();
 
 const [applicants,setApplicants] = useState([]);
 
@@ -56,15 +64,12 @@ console.log(e);
 
 async function approve(id){
 
-if(
+const ok = await confirm("Approve this candidate for the next round?", {
+    title: "Approve Candidate",
+    confirmText: "Approve"
+});
 
-!window.confirm(
-
-"Approve this candidate?"
-
-)
-
-){
+if(!ok){
 
 return;
 
@@ -102,7 +107,7 @@ app
 
 );
 
-alert(
+toast.success(
 
 "Candidate Approved"
 
@@ -120,15 +125,13 @@ console.log(e);
 
 async function reject(id){
 
-if(
+const ok = await confirm("Reject this candidate's application?", {
+    title: "Reject Candidate",
+    confirmText: "Reject",
+    danger: true
+});
 
-!window.confirm(
-
-"Reject this candidate?"
-
-)
-
-){
+if(!ok){
 
 return;
 
@@ -166,7 +169,7 @@ app
 
 );
 
-alert(
+toast.success(
 
 "Candidate Rejected"
 
@@ -198,7 +201,7 @@ Applicants
 
 applicants.length===0 &&
 
-<p>
+<p className="applicants-empty">
 
 No applicants yet.
 
@@ -246,7 +249,7 @@ rel="noreferrer"
 
 >
 
-📄 View Resume
+<FaFileAlt /> View Resume
 
 </a>
 

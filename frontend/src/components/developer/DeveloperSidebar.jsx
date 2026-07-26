@@ -1,28 +1,51 @@
-import {NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import {
+    FaTachometerAlt,
+    FaShieldAlt,
+    FaUser,
+    FaBriefcase,
+    FaClipboardList,
+    FaBrain,
+    FaChartLine
+} from "react-icons/fa";
+import { LOG_SERVICES } from "../../config/logServices";
 import "./DeveloperSidebar.css";
 
-export default function DeveloperSidebar(){
+const SERVICE_ICONS = {
+    auth: <FaShieldAlt />,
+    user: <FaUser />,
+    job: <FaBriefcase />,
+    application: <FaClipboardList />,
+    recommendation: <FaBrain />,
+    analytics: <FaChartLine />
+};
 
-return(
+export default function DeveloperSidebar() {
 
-<div className="developer-sidebar">
+    return (
 
-<h2>
+        <div className="developer-sidebar">
 
-Developer
+            <div className="developer-sidebar-title">Developer</div>
 
-</h2>
+            <NavLink to="/developer" end className={({ isActive }) => isActive ? "active" : ""}>
+                <FaTachometerAlt /> Dashboard
+            </NavLink>
 
-<NavLink to="/developer">
+            <div className="developer-sidebar-title developer-sidebar-group">Service Logs</div>
 
-Dashboard
+            {LOG_SERVICES.map(service => (
+                <NavLink
+                    key={service.id}
+                    to={`/developer/logs/${service.id}`}
+                    className={({ isActive }) => isActive ? "active" : ""}
+                >
+                    {SERVICE_ICONS[service.id]} {service.label}
+                </NavLink>
+            ))}
 
-</NavLink>
+        </div>
 
-
-
-</div>
-
-);
+    );
 
 }

@@ -1,19 +1,18 @@
-.candidate-layout{
-
-    display:flex;
-
-    margin-top:75px;
-
+.candidate-layout {
+  display: flex;
+  margin-top: 74px;
+  min-height: calc(100svh - 74px);
+  background: var(--bg-void);
 }
 
-.candidate-main{
+.candidate-main {
+  flex: 1;
+  padding: 48px;
+  min-height: calc(100svh - 74px);
+}
 
-    flex:1;
-
-    padding:40px;
-
-    background:#f4f7fb;
-
-    min-height:100vh;
-
+@media (max-width: 900px) {
+  .candidate-main {
+    padding: 28px 20px;
+  }
 }

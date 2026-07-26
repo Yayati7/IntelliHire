@@ -1,49 +1,73 @@
-.modal-overlay{
-
-position:fixed;
-
-left:0;
-
-top:0;
-
-right:0;
-
-bottom:0;
-
-background:rgba(0,0,0,.4);
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 10, 0.45);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
 }
 
-.modal{
-
-background:white;
-
-padding:35px;
-
-width:650px;
-
-border-radius:15px;
-
+.modal {
+  background: var(--bg-surface);
+  padding: 36px;
+  width: 100%;
+  max-width: 620px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-glass);
+  box-shadow: var(--shadow-card);
 }
 
-.history-job{
-
-padding:12px 0;
-
-border-bottom:1px solid #ddd;
-
+.modal h2 {
+  font-size: 22px;
+  margin-bottom: 22px;
 }
 
-.modal button{
+.history-job {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  font-size: 15px;
+}
 
-margin-top:25px;
+.history-job b {
+  color: var(--primary);
+  min-width: 30px;
+}
 
-padding:10px 22px;
+.modal input[type="file"] {
+  margin-top: 14px;
+  width: 100%;
+  padding: 14px;
+  border: 1px dashed var(--border-glass-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-base);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-family: var(--font-body);
+}
 
+.modal input[type="file"]::file-selector-button {
+  padding: 9px 16px;
+  margin-right: 14px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--gradient-primary);
+  color: #fff;
+  font-weight: 600;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
 }

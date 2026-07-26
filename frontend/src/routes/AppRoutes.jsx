@@ -22,6 +22,7 @@ import CompanyApplicants from "../pages/company/CompanyApplicants";
 import CompanyProfile from "../pages/company/CompanyProfile";
 
 import DeveloperDashboard from "../pages/developer/DeveloperDashboard";
+import ServiceLogs from "../pages/developer/ServiceLogs";
 
 import ProtectedRoute from "../components/ProtectedRoute";
 
@@ -133,6 +134,14 @@ export default function AppRoutes(){
                 element={
                     <ProtectedRoute role="ADMIN">
                         <DeveloperDashboard/>
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/developer/logs/:serviceId"
+                element={
+                    <ProtectedRoute role="ADMIN">
+                        <ServiceLogs/>
                     </ProtectedRoute>
                 }
             />

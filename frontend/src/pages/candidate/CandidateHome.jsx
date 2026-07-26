@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 import CandidateLayout from "../../layouts/CandidateLayout";
 
@@ -17,6 +16,8 @@ import HistoryModal from "../../components/candidate/HistoryModal";
 import PageLoader from "../../components/common/PageLoader";
 
 import { useAuth } from "../../context/AuthContext";
+
+import { FaBriefcase, FaClipboardList, FaFileAlt } from "react-icons/fa";
 
 import ResumeUploadModal from "../../components/candidate/ResumeUploadModal";
 import { uploadResume } from "../../services/resumeService";
@@ -349,8 +350,6 @@ return(
 
 <CandidateLayout>
 
-<ToastContainer/>
-
 <DashboardHeader
 
 name={name}
@@ -391,6 +390,8 @@ toast.success("Resume uploaded. Recommendations updated.");
 
 <StatsCard
 
+icon={<FaBriefcase />}
+
 title="Recommended Jobs"
 
 value={recommendations.length}
@@ -399,6 +400,8 @@ value={recommendations.length}
 
 <StatsCard
 
+icon={<FaClipboardList />}
+
 title="Applications"
 
 value="0"
@@ -406,6 +409,8 @@ value="0"
 />
 
 <StatsCard
+
+icon={<FaFileAlt />}
 
 title="Resume"
 
@@ -449,6 +454,8 @@ Recommended Jobs
 
 </h2>
 
+<div className="jobs-grid">
+
 {
 
 recommendations.map(job=>
@@ -471,6 +478,8 @@ onApply={apply}
 
 }
 
+</div>
+
 <h2
 
 className="jobs-heading"
@@ -480,6 +489,8 @@ className="jobs-heading"
 Recommendation History
 
 </h2>
+
+<div className="history-list">
 
 {
 
@@ -498,6 +509,8 @@ onOpen={openHistory}
 )
 
 }
+
+</div>
 
 <HistoryModal
 

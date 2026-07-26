@@ -1,39 +1,32 @@
 import "./CandidateSidebar.css";
+import { NavLink } from "react-router-dom";
+import { FaTachometerAlt, FaClipboardList, FaUserCircle } from "react-icons/fa";
 
-import {NavLink} from "react-router-dom";
+export default function CandidateSidebar() {
+    return (
+        <div className="sidebar">
+            <div className="sidebar-title">Candidate</div>
 
-export default function CandidateSidebar(){
+            <NavLink
+                to="/candidate/home"
+                className={({ isActive }) => `sidebar-link${isActive ? " active" : ""}`}
+            >
+                <FaTachometerAlt /> Dashboard
+            </NavLink>
 
-return(
+            <NavLink
+                to="/candidate/applications"
+                className={({ isActive }) => `sidebar-link${isActive ? " active" : ""}`}
+            >
+                <FaClipboardList /> Applications
+            </NavLink>
 
-<div className="sidebar">
-
-<h2>
-
-Candidate
-
-</h2>
-
-<NavLink to="/candidate/home">
-
-Dashboard
-
-</NavLink>
-
-<NavLink to="/candidate/applications">
-
-Applications
-
-</NavLink>
-
-<NavLink to="/candidate/profile">
-
-Profile
-
-</NavLink>
-
-</div>
-
-);
-
+            <NavLink
+                to="/candidate/profile"
+                className={({ isActive }) => `sidebar-link${isActive ? " active" : ""}`}
+            >
+                <FaUserCircle /> Profile
+            </NavLink>
+        </div>
+    );
 }

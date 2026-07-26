@@ -1,15 +1,9 @@
 import "./PageLoader.css";
 
-export default function PageLoader(){
-
-    return(
-
+export default function PageLoader() {
+    return (
         <div className="loader">
-
-            Loading...
-
+            <div className="loader-spinner" />
         </div>
-
     );
-
 }

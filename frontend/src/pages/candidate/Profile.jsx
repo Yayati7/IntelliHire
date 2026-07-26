@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FaArrowLeft } from "react-icons/fa";
 import "./Profile.css";
 
+import CandidateLayout from "../../layouts/CandidateLayout";
 import { useAuth } from "../../context/AuthContext";
 import { getUser, saveUserProfile } from "../../services/userService";
 
@@ -111,7 +114,7 @@ export default function Profile() {
 
             });
 
-            alert("Profile Updated");
+            toast.success("Profile Updated");
 
         }
 
@@ -119,7 +122,7 @@ export default function Profile() {
 
             console.log(e);
 
-            alert(e?.response?.data?.message || "Could not save profile.");
+            toast.error(e?.response?.data?.message || "Could not save profile.");
 
         }
 
@@ -145,134 +148,144 @@ export default function Profile() {
 
     return (
 
+        <CandidateLayout>
+
         <div className="profile-page">
+
+            <button
+                className="btn btn-outline"
+                onClick={() => navigate("/candidate/home")}
+            >
+                <FaArrowLeft /> Back to Home
+            </button>
 
             <h2>My Profile</h2>
 
-            <button
-                style={{ marginBottom: 20, padding: "10px 20px", cursor: "pointer" }}
-                onClick={() => navigate("/candidate/home")}
-            >
-                ← Back to Home
-            </button>
+            <div className="profile-grid-layout">
 
-            <div className="profile-card">
+                <div className="profile-card">
 
-                <label>Name</label>
+                    <label>Name</label>
 
-                <input
+                    <input
 
-                    name="name"
+                        name="name"
 
-                    value={profile.name}
+                        value={profile.name}
 
-                    onChange={updateField}
+                        onChange={updateField}
 
-                />
+                    />
 
-                <label>Email</label>
+                    <label>Email</label>
 
-                <input
+                    <input
 
-                    value={profile.email}
+                        value={profile.email}
 
-                    disabled
+                        disabled
 
-                />
+                    />
 
-                <label>Location</label>
+                    <label>Location</label>
 
-                <input
+                    <input
 
-                    name="location"
+                        name="location"
 
-                    value={profile.location}
+                        value={profile.location}
 
-                    onChange={updateField}
+                        onChange={updateField}
 
-                    placeholder="Not set yet"
+                        placeholder="Not set yet"
 
-                />
+                    />
 
-                <label>Summary</label>
+                    <label>Summary</label>
 
-                <textarea
+                    <textarea
 
-                    rows="5"
+                        rows="5"
 
-                    name="summary"
+                        name="summary"
 
-                    value={profile.summary}
+                        value={profile.summary}
 
-                    onChange={updateField}
+                        onChange={updateField}
 
-                    placeholder="Not set yet"
+                        placeholder="Not set yet"
 
-                />
+                    />
 
-                <button
+                    <button
 
-                    onClick={saveProfile}
+                        className="btn btn-primary"
 
-                    disabled={saving}
+                        onClick={saveProfile}
 
-                >
+                        disabled={saving}
 
-                    {saving ? "Saving..." : "Save Changes"}
+                    >
 
-                </button>
+                        {saving ? "Saving..." : "Save Changes"}
 
-            </div>
+                    </button>
 
-            <div className="resume-card">
+                </div>
 
-                <h3>Resume</h3>
+                <div className="resume-card">
 
-                {
+                    <h3>Resume</h3>
 
-                    resume ?
+                    {
 
-                    <>
+                        resume ?
+
+                        <>
+
+                            <p>
+
+                                <b>File:</b>
+
+                                {resume.fileName}
+
+                            </p>
+
+                            <p>
+
+                                <b>Uploaded:</b>
+
+                                {resume.uploadedAt}
+
+                            </p>
+
+                            <p>
+
+                                <b>Updated:</b>
+
+                                {resume.updatedAt}
+
+                            </p>
+
+                        </>
+
+                        :
 
                         <p>
 
-                            <b>File :</b>
-
-                            {resume.fileName}
+                            Resume not uploaded.
 
                         </p>
 
-                        <p>
+                    }
 
-                            <b>Uploaded :</b>
-
-                            {resume.uploadedAt}
-
-                        </p>
-
-                        <p>
-
-                            <b>Updated :</b>
-
-                            {resume.updatedAt}
-
-                        </p>
-
-                    </>
-
-                    :
-
-                    <p>
-
-                        Resume not uploaded.
-
-                    </p>
-
-                }
+                </div>
 
             </div>
 
         </div>
+
+        </CandidateLayout>
 
     );
 

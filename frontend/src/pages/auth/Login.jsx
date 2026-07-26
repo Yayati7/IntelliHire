@@ -4,6 +4,19 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import {
+    FaArrowLeft,
+    FaEnvelope,
+    FaLock,
+    FaUserGraduate,
+    FaBuilding,
+    FaLaptopCode,
+} from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+
+import "./Auth.css";
 
 function Login() {
 
@@ -16,6 +29,12 @@ function Login() {
     const role = search.get("role");
 
     const roleLabel = { USER: "Candidate", RECRUITER: "Company", ADMIN: "Developer" };
+    const roleIcon = { USER: <FaUserGraduate />, RECRUITER: <FaBuilding />, ADMIN: <FaLaptopCode /> };
+    const roleTagline = {
+        USER: "Upload your resume and let explainable AI find roles matched to you.",
+        RECRUITER: "Post jobs and discover candidates ranked by hybrid AI matching.",
+        ADMIN: "Monitor platform health, models and AI insights.",
+    };
 
     useEffect(() => {
         // If a session is still active when this page becomes visible
@@ -57,7 +76,7 @@ function Login() {
             const actualRole = res.data.role;
 
             if (role && actualRole !== role) {
-                alert(
+                toast.error(
                     `This email is registered as a ${roleLabel[actualRole] || actualRole} account. ` +
                     `Please use the ${roleLabel[actualRole] || actualRole} login option instead.`
                 );
@@ -75,7 +94,7 @@ function Login() {
                 navigate("/company/home", { replace: true });
             } else if (actualRole === "ADMIN") {
                 if (res.data.email !== "yayatimannsingh7@gmail.com") {
-                    alert("Access Denied");
+                    toast.error("Access Denied");
                     return;
                 }
                 navigate("/developer", { replace: true });
@@ -83,71 +102,109 @@ function Login() {
 
         } catch (e) {
             const message = e?.response?.data?.message || "Login failed. Please check your credentials.";
-            alert(message);
+            toast.error(message);
         }
     }
 
     return (
-        <div>
-            <h1>IntelliHire Login</h1>
+        <div className="auth-page">
+            <div className="auth-visual">
+                <div className="auth-visual-glow" aria-hidden="true" />
+                <motion.div
+                    className="auth-visual-content"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                    <div className="auth-visual-icon">
+                        {roleIcon[role] || <FaUserGraduate />}
+                    </div>
+                    <h2>IntelliHire</h2>
+                    <p>
+                        {roleTagline[role] ||
+                            "Explainable AI hiring — matching candidates to roles with transparent, model-backed reasoning."}
+                    </p>
+                </motion.div>
+            </div>
 
-            <button
-                style={{ marginBottom: 15, padding: "8px 18px", cursor: "pointer" }}
-                onClick={() => navigate("/")}
-            >
-                ← Home
-            </button>
+            <div className="auth-panel">
+                <motion.div
+                    className="auth-card"
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                >
+                    <button className="auth-back" onClick={() => navigate("/")}>
+                        <FaArrowLeft /> Home
+                    </button>
 
-            {role && <p>Logging in as <b>{roleLabel[role] || role}</b></p>}
+                    <h1>Welcome Back</h1>
 
-            {role !== "ADMIN" && (
-                <>
-                    <input
-                        placeholder="email"
-                        onChange={e => setEmail(e.target.value)}
-                    />
-                    <br />
-                    <input
-                        placeholder="password"
-                        type="password"
-                        onChange={e => setPassword(e.target.value)}
-                    />
-                    <br />
-                    <button onClick={normalLogin}>Login</button>
-                    <hr />
-                </>
-            )}
+                    {role && (
+                        <span className="auth-role-badge">
+                            Logging in as <strong>{roleLabel[role] || role}</strong>
+                        </span>
+                    )}
 
-            <button
-                onClick={() => {
-                    let oauthRole = "USER";
-                    if (role === "RECRUITER") oauthRole = "RECRUITER";
-                    if (role === "ADMIN") oauthRole = "ADMIN";
+                    {role !== "ADMIN" && (
+                        <>
+                            <div className="auth-form">
+                                <div className="input-group">
+                                    <FaEnvelope />
+                                    <input
+                                        placeholder="Email address"
+                                        onChange={e => setEmail(e.target.value)}
+                                    />
+                                </div>
 
-                    window.location.href =
-                        `http://localhost:8081/oauth2/authorization/google?role=${oauthRole}`;
-                }}
-            >
-                Login With Google
-            </button>
+                                <div className="input-group">
+                                    <FaLock />
+                                    <input
+                                        placeholder="Password"
+                                        type="password"
+                                        onChange={e => setPassword(e.target.value)}
+                                    />
+                                </div>
 
-            {role !== "ADMIN" && (
-                <p>
-                    New here?{" "}
-                    <span
-                        style={{ color: "#2563eb", cursor: "pointer" }}
-                        onClick={() => navigate(`/signup?role=${role || "USER"}`)}
+                                <button className="btn btn-primary auth-submit" onClick={normalLogin}>
+                                    Login
+                                </button>
+                            </div>
+
+                            <div className="auth-divider">or continue with</div>
+                        </>
+                    )}
+
+                    <button
+                        className="google-btn"
+                        onClick={() => {
+                            let oauthRole = "USER";
+                            if (role === "RECRUITER") oauthRole = "RECRUITER";
+                            if (role === "ADMIN") oauthRole = "ADMIN";
+
+                            window.location.href =
+                                `http://localhost:8081/oauth2/authorization/google?role=${oauthRole}`;
+                        }}
                     >
-                        Create an account
-                    </span>
-                </p>
-            )}
+                        <FcGoogle size={20} /> Login With Google
+                    </button>
 
-            {role === "ADMIN" && (
-                <p style={{ marginTop: 15, color: "#666" }}>
-                    Developer access requires signing in with the authorized Google account.
-                </p>
-            )}
+                    {role !== "ADMIN" && (
+                        <p className="auth-footer-text">
+                            New here?{" "}
+                            <span onClick={() => navigate(`/signup?role=${role || "USER"}`)}>
+                                Create an account
+                            </span>
+                        </p>
+                    )}
+
+                    {role === "ADMIN" && (
+                        <p className="auth-note">
+                            Developer access requires signing in with the authorized Google account.
+                        </p>
+                    )}
+                </motion.div>
+            </div>
         </div>
     );
 }

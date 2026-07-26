@@ -32,6 +32,8 @@ from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
 
+import "./MyJobs.css";
+
 export default function MyJobs(){
 
 const navigate=
@@ -106,11 +108,15 @@ return(
 
 <CompanyLayout>
 
+<div className="my-jobs-page">
+
 <h1>
 
 My Posted Jobs
 
 </h1>
+
+<div className="my-jobs-grid">
 
 {
 
@@ -133,6 +139,10 @@ onApplicants={applicants}
 )
 
 }
+
+</div>
+
+</div>
 
 </CompanyLayout>
 

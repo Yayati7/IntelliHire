@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
 import { saveUserProfile } from "../../services/userService";
+
+import "./Auth.css";
 
 const ROLE_LABEL = { USER: "Candidate", RECRUITER: "Company", ADMIN: "Developer" };
 
@@ -18,7 +21,7 @@ function LoginSuccess() {
             const error = params.get("error");
 
             if (error === "access_denied") {
-                alert("Access Denied. This Google account is not authorized for Developer access.");
+                toast.error("Access Denied. This Google account is not authorized for Developer access.");
                 navigate("/login?role=ADMIN", { replace: true });
                 return;
             }
@@ -26,7 +29,7 @@ function LoginSuccess() {
             if (error === "role_mismatch") {
                 const actualRole = params.get("actualRole");
                 const label = ROLE_LABEL[actualRole] || actualRole;
-                alert(`This account already exists as a ${label}. Please log in through the ${label} portal.`);
+                toast.error(`This account already exists as a ${label}. Please log in through the ${label} portal.`);
                 navigate(`/login?role=${actualRole}`, { replace: true });
                 return;
             }
@@ -76,7 +79,7 @@ function LoginSuccess() {
                 navigate("/company/home", { replace: true });
             } else if (role === "ADMIN") {
                 if (email !== "yayatimannsingh7@gmail.com") {
-                    alert("Access Denied");
+                    toast.error("Access Denied");
                     navigate("/login", { replace: true });
                     return;
                 }
@@ -91,7 +94,13 @@ function LoginSuccess() {
 
     }, []);
 
-    return <h1>Signing you in...</h1>;
+    return (
+        <div className="auth-loading">
+            <div className="auth-loading-spinner" />
+            <h1>Signing you in...</h1>
+            <p>Please wait while we set up your account.</p>
+        </div>
+    );
 }
 
 export default LoginSuccess;

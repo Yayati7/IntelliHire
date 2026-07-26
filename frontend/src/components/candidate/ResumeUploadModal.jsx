@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
 import "./HistoryModal.css";
 
 export default function ResumeUploadModal({ open, onClose, onUpload }) {
@@ -10,7 +11,7 @@ export default function ResumeUploadModal({ open, onClose, onUpload }) {
 
     async function submit() {
         if (!file) {
-            alert("Please choose a PDF file first.");
+            toast.error("Please choose a PDF file first.");
             return;
         }
         setUploading(true);
@@ -19,7 +20,7 @@ export default function ResumeUploadModal({ open, onClose, onUpload }) {
             onClose();
         } catch (e) {
             console.log(e);
-            alert(e?.response?.data?.message || "Upload failed. Only PDF files under 10MB allowed.");
+            toast.error(e?.response?.data?.message || "Upload failed. Only PDF files under 10MB allowed.");
         } finally {
             setUploading(false);
         }
@@ -34,11 +35,11 @@ export default function ResumeUploadModal({ open, onClose, onUpload }) {
                     accept="application/pdf"
                     onChange={(e) => setFile(e.target.files[0])}
                 />
-                <div style={{ marginTop: 20, display: "flex", gap: 10 }}>
-                    <button onClick={submit} disabled={uploading}>
+                <div className="modal-actions">
+                    <button className="btn btn-primary" onClick={submit} disabled={uploading}>
                         {uploading ? "Uploading..." : "Upload"}
                     </button>
-                    <button onClick={onClose}>Cancel</button>
+                    <button className="btn btn-outline" onClick={onClose}>Cancel</button>
                 </div>
             </div>
         </div>

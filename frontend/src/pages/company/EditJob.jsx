@@ -12,6 +12,8 @@ useParams
 
 from "react-router-dom";
 
+import { toast } from "react-toastify";
+
 import { useAuth } from "../../context/AuthContext";
 
 import CompanyLayout from "../../layouts/CompanyLayout";
@@ -108,7 +110,7 @@ recruiterId:user.userId
 
 );
 
-alert(
+toast.success(
 
 "Job Updated"
 
@@ -142,63 +144,53 @@ Edit Job
 
 </h2>
 
-<input
+<div className="form-field">
+    <label>Job Title</label>
+    <input
+        name="title"
+        value={job.title}
+        onChange={handleChange}
+    />
+</div>
 
-name="title"
+<div className="form-field">
+    <label>Company</label>
+    <input
+        name="company"
+        value={job.company}
+        onChange={handleChange}
+    />
+</div>
 
-value={job.title}
+<div className="form-field">
+    <label>Location</label>
+    <input
+        name="location"
+        value={job.location}
+        onChange={handleChange}
+    />
+</div>
 
-onChange={handleChange}
+<div className="form-field">
+    <label>Job Description</label>
+    <textarea
+        rows="8"
+        name="description"
+        value={job.description}
+        onChange={handleChange}
+    />
+</div>
 
-/>
+<div className="form-field">
+    <label>Skills</label>
+    <input
+        name="skills"
+        value={job.skills}
+        onChange={handleChange}
+    />
+</div>
 
-<input
-
-name="company"
-
-value={job.company}
-
-onChange={handleChange}
-
-/>
-
-<input
-
-name="location"
-
-value={job.location}
-
-onChange={handleChange}
-
-/>
-
-<textarea
-
-rows="8"
-
-name="description"
-
-value={job.description}
-
-onChange={handleChange}
-
-/>
-
-<input
-
-name="skills"
-
-value={job.skills}
-
-onChange={handleChange}
-
-/>
-
-<button
-
-onClick={update}
-
->
+<button className="btn btn-primary" onClick={update}>
 
 Update Job
 
